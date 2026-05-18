@@ -1298,6 +1298,8 @@ function showPage(page) {
       item.classList.add('active');
     }
   });
+
+  if (page === 'cms') loadCmsContent();
 }
 
 // ─── CHART ───
@@ -1412,13 +1414,6 @@ async function saveCmsItem(key, label) {
       btn.disabled = false;
     }, 2000);
   }
-}
-
-// CMS sayfası açılınca otomatik yükle
-const originalShowPage = showPage;
-function showPage(page) {
-  originalShowPage(page);
-  if (page === 'cms') loadCmsContent();
 }
 
 // ─── LOGOUT ───
