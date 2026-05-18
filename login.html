@@ -751,7 +751,9 @@ async function handleLogin(panel) {
   // Kullanıcı tipine göre yönlendir
   const { data: profile } = await sb.from('profiles').select('user_type').eq('id', data.user.id).single();
 
-  if (profile?.user_type === 'designer') {
+ if (profile?.user_type === 'admin') {
+    window.location.href = 'dashboard-admin.html';
+  } else if (profile?.user_type === 'designer') {
     window.location.href = 'dashboard-designer.html';
   } else {
     window.location.href = 'dashboard-ipholder.html';
