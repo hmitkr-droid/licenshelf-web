@@ -749,7 +749,10 @@ async function handleLogin(panel) {
   }
 
   // Kullanıcı tipine göre yönlendir
-  const { data: profile } = await sb.from('profiles').select('user_type').eq('id', data.user.id).single();
+  const { data: profile, error: profileError } = await sb.from('profiles').select('user_type').eq('id', data.user.id).single();
+console.log('Profile:', profile);
+console.log('Profile error:', profileError);
+console.log('User ID:', data.user.id);
 
  if (profile?.user_type === 'admin') {
     window.location.href = 'dashboard-admin.html';
