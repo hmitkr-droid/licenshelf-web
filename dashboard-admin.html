@@ -619,6 +619,13 @@ tr:hover td { background: var(--bg); }
       </a>
     </nav>
 
+    <div class="sidebar-label">Website</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" onclick="showPage('cms')">
+        <span class="nav-icon">✏️</span> Site Content
+      </a>
+    </nav>
+
     <div class="sidebar-bottom">
       <div class="user-info">
         <div class="user-avatar">H</div>
@@ -1233,6 +1240,22 @@ tr:hover td { background: var(--bg); }
       </div>
     </div>
 
+    <!-- ─── CMS PAGE ─── -->
+    <div class="page" id="page-cms">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Site Content Manager</div>
+            <div class="section-sub">Edit your website texts, titles and descriptions directly from here.</div>
+          </div>
+          <button onclick="loadCmsContent()" style="background:var(--bg);border:1px solid var(--border);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text-2);">🔄 Refresh</button>
+        </div>
+
+        <div id="cms-sections"></div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1250,7 +1273,7 @@ document.getElementById('current-date').textContent = now.toLocaleDateString('en
 });
 
 // ─── PAGE NAVIGATION ───
-const pages = ['overview','approvals','licenses','assets','ipholders','designers','royalties','sales'];
+const pages = ['overview','approvals','licenses','assets','ipholders','designers','royalties','sales','cms'];
 const titles = {
   overview: 'Overview',
   approvals: 'Pending Approvals',
@@ -1259,7 +1282,8 @@ const titles = {
   ipholders: 'IP Holders',
   designers: 'Designers',
   royalties: 'Royalty Management',
-  sales: 'Sales Overview'
+  sales: 'Sales Overview',
+  cms: 'Site Content Manager'
 };
 
 function showPage(page) {
@@ -1303,6 +1327,101 @@ new Chart(ctx, {
     }
   }
 });
+
+// ─── CMS ───
+async function loadCmsContent() {
+  const container = document.getElementById('cms-sections');
+  container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-3)">Loading...</div>';
+
+  const { data, error } = await sb.from('site_content').select('*').order('section').order('label');
+
+  if (error || !data) {
+    container.innerHTML = '<div style="padding:2rem;color:var(--error)">Error loading content.</div>';
+    return;
+  }
+
+  // Section'lara göre grupla
+  const sections = {};
+  data.forEach(item => {
+    if (!sections[item.section]) sections[item.section] = [];
+    sections[item.section].push(item);
+  });
+
+  let html = '';
+  for (const [section, items] of Object.entries(sections)) {
+    html += `
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <div class="card-title">📝 ${section}</div>
+        </div>
+        <div class="card-body">
+    `;
+    items.forEach(item => {
+      const isLong = item.value.length > 80;
+      html += `
+        <div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">${item.label}</label>
+          ${isLong
+            ? `<textarea id="cms-${item.key}" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;resize:vertical;min-height:80px;" onchange="markChanged('${item.key}')">${item.value}</textarea>`
+            : `<input type="text" id="cms-${item.key}" value="${item.value.replace(/"/g, '&quot;')}" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;" onchange="markChanged('${item.key}')" />`
+          }
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <span style="font-size:11px;color:var(--text-3);">Key: <code style="background:var(--bg);padding:2px 6px;border-radius:4px;">${item.key}</code></span>
+            <button onclick="saveCmsItem('${item.key}', '${item.label}')" id="btn-${item.key}"
+              style="background:var(--orange);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:opacity 0.2s;">
+              Save
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function markChanged(key) {
+  const btn = document.getElementById(`btn-${key}`);
+  if (btn) {
+    btn.style.background = 'var(--warning)';
+    btn.textContent = 'Save *';
+  }
+}
+
+async function saveCmsItem(key, label) {
+  const el = document.getElementById(`cms-${key}`);
+  const btn = document.getElementById(`btn-${key}`);
+  if (!el || !btn) return;
+
+  const value = el.value || el.textContent;
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  const { error } = await sb.from('site_content')
+    .update({ value: value, updated_at: new Date().toISOString() })
+    .eq('key', key);
+
+  if (error) {
+    btn.textContent = 'Error!';
+    btn.style.background = 'var(--error)';
+  } else {
+    btn.textContent = '✓ Saved';
+    btn.style.background = 'var(--success)';
+    setTimeout(() => {
+      btn.textContent = 'Save';
+      btn.style.background = 'var(--orange)';
+      btn.disabled = false;
+    }, 2000);
+  }
+}
+
+// CMS sayfası açılınca otomatik yükle
+const originalShowPage = showPage;
+function showPage(page) {
+  originalShowPage(page);
+  if (page === 'cms') loadCmsContent();
+}
 
 // ─── LOGOUT ───
 async function handleLogout() {
