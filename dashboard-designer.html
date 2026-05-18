@@ -841,18 +841,29 @@ document.getElementById('file-input').addEventListener('change', async function(
   const fileExt = file.name.split('.').pop();
   const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substr(2,9)}.${fileExt}`;
 
-  const { error } = await sb.storage
+  const { error: storageError } = await sb.storage
     .from('designer-assets')
     .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
-  btn.textContent = 'Choose File';
-  btn.disabled = false;
+  if (!storageError) {
+    const { data: urlData } = sb.storage.from('designer-assets').getPublicUrl(fileName);
 
-  if (!error) {
-    alert('✅ Design uploaded successfully! Pending admin approval.');
+    await sb.from('assets').insert({
+      uploader_id: user.id,
+      file_url: urlData.publicUrl,
+      storage_path: fileName,
+      file_name: file.name,
+      asset_type: 'designer',
+      status: 'pending'
+    });
+
+    alert('✅ Design uploaded! Pending admin approval.');
   } else {
     alert('❌ Upload failed. Please try again.');
   }
+
+  btn.textContent = 'Choose File';
+  btn.disabled = false;
 });
 async function saveProfile() {
   const { data: { user } } = await sb.auth.getUser();
