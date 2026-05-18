@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LicenShelf — Designer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A0F1E;
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.1);
+  --teal-dark: #00A88A;
+  --purple: #8B5CF6;
+  --purple-dim: rgba(139,92,246,0.12);
+  --blue: #3B82F6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --bg: #F7F8FC;
+  --white: #FFFFFF;
+  --text: #0D1224;
+  --text-2: #4A5068;
+  --text-3: #8890A8;
+  --border: #E4E7F0;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --sidebar-w: 240px;
+}
+
+html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+.layout { display: flex; min-height: 100vh; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--navy);
+  min-height: 100vh;
+  position: fixed; top: 0; left: 0;
+  display: flex; flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-logo { padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo img { height: 28px; width: auto; }
+
+.sidebar-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 0.75rem; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  font-size: 14px; color: rgba(255,255,255,0.5);
+  cursor: pointer; transition: background 0.2s, color 0.2s;
+  border: none; background: none; width: 100%; text-align: left;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+.nav-item.active { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar-bottom {
+  margin-top: auto; padding: 1rem 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.user-info { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--teal); color: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+
+.user-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.user-role { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+.logout-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.3);
+  cursor: pointer; transition: color 0.2s, background 0.2s;
+  border: none; background: none; width: 100%; margin-top: 4px;
+}
+
+.logout-btn:hover { color: var(--error); background: rgba(239,68,68,0.08); }
+
+/* ─── MAIN ─── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 2rem; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 40;
+}
+
+.topbar-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.topbar-date { font-size: 13px; color: var(--text-3); }
+
+.designer-badge {
+  background: var(--teal-dim);
+  border: 1px solid rgba(0,212,170,0.2);
+  color: var(--teal);
+  font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 100px;
+}
+
+/* ─── PAGES ─── */
+.page { padding: 2rem; display: none; }
+.page.active { display: block; }
+
+/* ─── STATS ─── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem; margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+
+.stat-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 1rem;
+}
+
+.stat-icon.teal { background: var(--teal-dim); }
+.stat-icon.orange { background: var(--orange-dim); }
+.stat-icon.purple { background: var(--purple-dim); }
+.stat-icon.blue { background: var(--blue-dim); }
+
+.stat-value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; display: block; }
+.stat-label { font-size: 13px; color: var(--text-3); margin-top: 4px; display: block; }
+.stat-change { font-size: 12px; margin-top: 8px; }
+.stat-change.up { color: var(--success); }
+
+/* ─── CARDS ─── */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+
+.card-header {
+  padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.card-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.card-action { font-size: 13px; color: var(--teal); cursor: pointer; font-weight: 500; }
+.card-body { padding: 1.5rem; }
+
+/* ─── GRID ─── */
+.grid-2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+
+/* ─── CHART ─── */
+.chart-wrap { position: relative; height: 220px; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3); padding: 0 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+td { padding: 1rem 1.5rem; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+.td-main { font-weight: 500; color: var(--text); font-size: 14px; }
+.td-sub { font-size: 12px; color: var(--text-3); }
+
+/* ─── BADGES ─── */
+.badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
+.badge.success { background: rgba(16,185,129,0.1); color: var(--success); }
+.badge.warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.badge.error { background: rgba(239,68,68,0.1); color: var(--error); }
+.badge.teal { background: var(--teal-dim); color: var(--teal); }
+
+/* ─── DESIGN CARDS ─── */
+.designs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.design-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.design-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+
+.design-thumb {
+  height: 140px;
+  background: linear-gradient(135deg, var(--navy) 0%, #1a2438 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+}
+
+.design-info { padding: 1rem; }
+.design-name { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.design-meta { font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+.design-stats { display: flex; gap: 12px; font-size: 12px; color: var(--text-2); }
+.design-stat { display: flex; align-items: center; gap: 4px; }
+
+/* ─── UPLOAD ─── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 14px; padding: 3rem 2rem;
+  text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-area:hover { border-color: var(--teal); background: var(--teal-dim); }
+.upload-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.upload-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+.upload-desc { font-size: 13px; color: var(--text-3); margin-bottom: 1.5rem; }
+
+.btn-teal {
+  background: var(--teal); color: var(--navy);
+  border: none; padding: 10px 24px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+}
+
+.btn-teal:hover { opacity: 0.9; }
+
+/* ─── FORM ─── */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+label { font-size: 13px; font-weight: 500; color: var(--text-2); }
+
+input[type="text"], input[type="email"], textarea, select {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--text); background: var(--bg); outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus { border-color: var(--teal); background: var(--white); }
+textarea { resize: vertical; min-height: 80px; }
+
+/* ─── EARNINGS ─── */
+.earnings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 0; border-bottom: 1px solid var(--border);
+}
+.earnings-row:last-child { border-bottom: none; }
+.earnings-label { font-size: 14px; color: var(--text-2); }
+.earnings-value { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+
+/* ─── SECTION HEADER ─── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+.section-sub { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+
+/* ─── PROGRESS BAR ─── */
+.progress-wrap { margin-bottom: 1rem; }
+.progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); margin-bottom: 6px; }
+.progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; background: var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="LicenShelf" />
+    </div>
+
+    <div class="sidebar-label">Dashboard</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showPage('overview', this)">
+        <span class="nav-icon">📊</span> Overview
+      </button>
+      <button class="nav-item" onclick="showPage('designs', this)">
+        <span class="nav-icon">🎨</span> My Designs
+      </button>
+      <button class="nav-item" onclick="showPage('upload', this)">
+        <span class="nav-icon">⬆️</span> Submit Design
+      </button>
+      <button class="nav-item" onclick="showPage('earnings', this)">
+        <span class="nav-icon">💰</span> Earnings
+      </button>
+      <button class="nav-item" onclick="showPage('settings', this)">
+        <span class="nav-icon">⚙️</span> Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div>
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-role">Designer</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <span>🚪</span> Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Overview</div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="current-date"></div>
+        <div class="designer-badge">DESIGNER</div>
+      </div>
+    </div>
+
+    <!-- ─── OVERVIEW ─── -->
+    <div class="page active" id="page-overview">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Welcome back 🎨</div>
+          <div class="section-sub">Here's your design performance and earnings.</div>
+        </div>
+        <button class="btn-teal" onclick="showPage('upload', document.querySelector('[onclick*=upload]'))">+ Submit New Design</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon teal">💰</div>
+          <span class="stat-value">$1,240</span>
+          <span class="stat-label">Total Earned</span>
+          <div class="stat-change up">↑ 18% from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange">📅</div>
+          <span class="stat-value">$240</span>
+          <span class="stat-label">This Month</span>
+          <div class="stat-change up">↑ 12% from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">🎨</div>
+          <span class="stat-value">24</span>
+          <span class="stat-label">Total Designs</span>
+          <div class="stat-change up">18 approved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📦</div>
+          <span class="stat-value">980</span>
+          <span class="stat-label">Total Sales</span>
+          <div class="stat-change up">↑ 24% this month</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Monthly Earnings</div>
+            <span style="font-size:12px;color:var(--success)">+18% growth</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap">
+              <canvas id="earningsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Design Status</div>
+          </div>
+          <div class="card-body">
+            <div class="progress-wrap">
+              <div class="progress-label">
+                <span>Approved</span>
+                <span style="color:var(--success);font-weight:600">18 / 24</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label">
+                <span>Pending Review</span>
+                <span style="color:var(--warning);font-weight:600">4 / 24</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:17%;background:var(--warning)"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label">
+                <span>Rejected</span>
+                <span style="color:var(--error);font-weight:600">2 / 24</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:8%;background:var(--error)"></div></div>
+            </div>
+
+            <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
+              <div class="earnings-row">
+                <span class="earnings-label">Your Share (50%)</span>
+                <span class="earnings-value" style="color:var(--teal)">$1,240.00</span>
+              </div>
+              <div class="earnings-row">
+                <span class="earnings-label">Pending Payment</span>
+                <span class="earnings-value" style="color:var(--warning)">$240.00</span>
+              </div>
+              <div class="earnings-row">
+                <span class="earnings-label">Next Payment</span>
+                <span class="earnings-value" style="color:var(--text-3)">Jun 1, 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Best Performing Designs</div>
+          <span class="card-action" onclick="showPage('designs', document.querySelector('[onclick*=designs]'))">View all</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Design</th>
+                <th>Category</th>
+                <th>Sales</th>
+                <th>Earned</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="td-main">🎮 Cyberpunk City — Night Scene</div></td>
+                <td>Fan Art</td>
+                <td>320</td>
+                <td style="color:var(--success);font-weight:600">$480.00</td>
+                <td><span class="badge success">Approved</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-main">🌸 Anime Bloom — Cherry Set</div></td>
+                <td>Illustration</td>
+                <td>240</td>
+                <td style="color:var(--success);font-weight:600">$360.00</td>
+                <td><span class="badge success">Approved</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-main">🐉 Dragon Spirit — Minimal</div></td>
+                <td>Fan Art</td>
+                <td>180</td>
+                <td style="color:var(--success);font-weight:600">$270.00</td>
+                <td><span class="badge success">Approved</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-main">🎌 Samurai Sunset Series</div></td>
+                <td>Illustration</td>
+                <td>140</td>
+                <td style="color:var(--success);font-weight:600">$210.00</td>
+                <td><span class="badge warning">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── MY DESIGNS ─── -->
+    <div class="page" id="page-designs">
+      <div class="section-header">
+        <div>
+          <div class="section-title">My Designs</div>
+          <div class="section-sub">All your submitted designs and their status.</div>
+        </div>
+        <button class="btn-teal" onclick="showPage('upload', document.querySelector('[onclick*=upload]'))">+ Submit New</button>
+      </div>
+
+      <div class="designs-grid">
+        <div class="design-card">
+          <div class="design-thumb">🎮</div>
+          <div class="design-info">
+            <div class="design-name">Cyberpunk City — Night</div>
+            <div class="design-meta">Fan Art · Submitted Mar 2026</div>
+            <div style="margin-bottom:8px"><span class="badge success">Approved</span></div>
+            <div class="design-stats">
+              <div class="design-stat">📦 320 sales</div>
+              <div class="design-stat" style="color:var(--success)">$480 earned</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card">
+          <div class="design-thumb">🌸</div>
+          <div class="design-info">
+            <div class="design-name">Anime Bloom — Cherry</div>
+            <div class="design-meta">Illustration · Submitted Feb 2026</div>
+            <div style="margin-bottom:8px"><span class="badge success">Approved</span></div>
+            <div class="design-stats">
+              <div class="design-stat">📦 240 sales</div>
+              <div class="design-stat" style="color:var(--success)">$360 earned</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card">
+          <div class="design-thumb">🐉</div>
+          <div class="design-info">
+            <div class="design-name">Dragon Spirit — Minimal</div>
+            <div class="design-meta">Fan Art · Submitted Jan 2026</div>
+            <div style="margin-bottom:8px"><span class="badge success">Approved</span></div>
+            <div class="design-stats">
+              <div class="design-stat">📦 180 sales</div>
+              <div class="design-stat" style="color:var(--success)">$270 earned</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card">
+          <div class="design-thumb">🎌</div>
+          <div class="design-info">
+            <div class="design-name">Samurai Sunset Series</div>
+            <div class="design-meta">Illustration · Submitted May 2026</div>
+            <div style="margin-bottom:8px"><span class="badge warning">Pending Review</span></div>
+            <div class="design-stats">
+              <div class="design-stat">📦 0 sales</div>
+              <div class="design-stat">Awaiting approval</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="design-card">
+          <div class="design-thumb">⚡</div>
+          <div class="design-info">
+            <div class="design-name">Electric Storm Pack</div>
+            <div class="design-meta">Typography · Submitted Apr 2026</div>
+            <div style="margin-bottom:8px"><span class="badge error">Rejected</span></div>
+            <div class="design-stats">
+              <div class="design-stat" style="color:var(--error)">Quality standards not met</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SUBMIT DESIGN ─── -->
+    <div class="page" id="page-upload">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Submit a Design</div>
+          <div class="section-sub">Upload your original artwork for review. Approved designs earn 50% of every sale.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="upload-area" onclick="document.getElementById('file-input').click()">
+            <div class="upload-icon">🎨</div>
+            <div class="upload-title">Upload your design</div>
+            <div class="upload-desc">PNG with transparent background recommended · Min 2000px · Max 20MB</div>
+            <button class="btn-teal">Choose File</button>
+            <input type="file" id="file-input" accept="image/*" style="display:none" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Design Details</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label>Design Title</label>
+            <input type="text" placeholder="e.g. Cyberpunk City — Night Scene" />
+          </div>
+          <div class="form-group">
+            <label>Style / Category</label>
+            <select>
+              <option>Fan Art</option>
+              <option>Digital Illustration</option>
+              <option>Typography</option>
+              <option>Photography</option>
+              <option>Mixed / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Related IP / Inspiration (optional)</label>
+            <input type="text" placeholder="e.g. Inspired by cyberpunk aesthetics (original work)" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea placeholder="Describe your design, what makes it unique, suggested use cases..."></textarea>
+          </div>
+          <div style="background:var(--teal-dim);border:1px solid rgba(0,212,170,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:13px;color:var(--text-2);">
+            ✅ By submitting, you confirm this is your original work and you own all rights to it. You agree to Licenshelf's <a href="#" style="color:var(--teal)">Creator Terms</a>.
+          </div>
+          <button class="btn-teal">Submit for Review →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── EARNINGS ─── -->
+    <div class="page" id="page-earnings">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Earnings</div>
+          <div class="section-sub">Your revenue from design sales on Licenshelf.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon teal">💸</div>
+          <span class="stat-value">$1,240</span>
+          <span class="stat-label">Total Earned</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange">✅</div>
+          <span class="stat-value">$1,000</span>
+          <span class="stat-label">Already Paid</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">⏳</div>
+          <span class="stat-value">$240</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📅</div>
+          <span class="stat-value">Jun 1</span>
+          <span class="stat-label">Next Payment</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Payment History</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Sales</th>
+                <th>Your Share (50%)</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>May 2026</td>
+                <td>128</td>
+                <td style="font-weight:600;color:var(--warning)">$240.00</td>
+                <td><span class="badge warning">Pending</span></td>
+                <td>Jun 1, 2026</td>
+              </tr>
+              <tr>
+                <td>April 2026</td>
+                <td>210</td>
+                <td style="font-weight:600;color:var(--success)">$400.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>May 1, 2026</td>
+              </tr>
+              <tr>
+                <td>March 2026</td>
+                <td>180</td>
+                <td style="font-weight:600;color:var(--success)">$360.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>Apr 1, 2026</td>
+              </tr>
+              <tr>
+                <td>February 2026</td>
+                <td>124</td>
+                <td style="font-weight:600;color:var(--success)">$240.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>Mar 1, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div class="page" id="page-settings">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Account Settings</div>
+          <div class="section-sub">Manage your profile and payment details.</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Profile</div></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="settings-name" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="settings-email" disabled style="opacity:0.6" />
+            </div>
+            <div class="form-group">
+              <label>Portfolio / Social Link</label>
+              <input type="text" placeholder="behance.net/yourprofile" />
+            </div>
+            <div class="form-group">
+              <label>Bio (optional)</label>
+              <textarea placeholder="Tell us about your style and experience..."></textarea>
+            </div>
+            <button class="btn-teal" onclick="saveProfile()">Save Changes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Payment Details</div></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Payment Method</label>
+              <select>
+                <option>Bank Transfer (SWIFT)</option>
+                <option>Wise</option>
+                <option>PayPal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Account Holder Name</label>
+              <input type="text" placeholder="Your full name" />
+            </div>
+            <div class="form-group">
+              <label>IBAN / Account Number</label>
+              <input type="text" placeholder="TR00 0000 0000 0000 0000 00" />
+            </div>
+            <div class="form-group">
+              <label>SWIFT / BIC</label>
+              <input type="text" placeholder="XXXXTRXX" />
+            </div>
+            <button class="btn-teal">Save Payment Info</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://wcrqfujmltcvotjrwmys.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcnFmdWptbHRjdm90anJ3bXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDcyODgsImV4cCI6MjA5NDYyMzI4OH0.4szQL6x4ubMi_guj6cipKdarcTsE9SZ7_WV8wG6idCY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+
+async function loadUser() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (profile) {
+    const name = profile.full_name || user.email;
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('settings-name').value = profile.full_name || '';
+    document.getElementById('settings-email').value = user.email;
+  }
+}
+
+loadUser();
+
+const pages = ['overview','designs','upload','earnings','settings'];
+const titles = {
+  overview: 'Overview',
+  designs: 'My Designs',
+  upload: 'Submit Design',
+  earnings: 'Earnings',
+  settings: 'Account Settings'
+};
+
+function showPage(page, btn) {
+  pages.forEach(p => document.getElementById(`page-${p}`)?.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  document.getElementById('page-title').textContent = titles[page];
+  if (btn) btn.classList.add('active');
+}
+
+const ctx = document.getElementById('earningsChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    datasets: [{
+      label: 'Earnings ($)',
+      data: [60, 120, 180, 240, 360, 400, 240],
+      borderColor: '#00D4AA',
+      backgroundColor: 'rgba(0,212,170,0.08)',
+      borderWidth: 2, tension: 0.4, fill: true,
+      pointBackgroundColor: '#00D4AA', pointRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#8890A8', font: { size: 11 } } },
+      y: { grid: { color: '#F0F2F8' }, ticks: { color: '#8890A8', font: { size: 11 }, callback: v => '$' + v } }
+    }
+  }
+});
+
+async function saveProfile() {
+  const { data: { user } } = await sb.auth.getUser();
+  const name = document.getElementById('settings-name').value;
+  await sb.from('profiles').update({ full_name: name }).eq('id', user.id);
+  alert('Profile saved!');
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
+}
+</script>
+
+</body>
+</html>
