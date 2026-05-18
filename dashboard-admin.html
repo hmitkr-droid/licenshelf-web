@@ -1334,6 +1334,9 @@ async function loadCmsContent() {
   container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-3)">Loading...</div>';
 
   const { data, error } = await sb.from('site_content').select('*').order('section').order('label');
+  
+  console.log('CMS data:', data);  // BU SATIRI EKLE
+  console.log('CMS error:', error); // BU SATIRI EKLE
 
   if (error || !data) {
     container.innerHTML = '<div style="padding:2rem;color:var(--error)">Error loading content.</div>';
