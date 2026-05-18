@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LicenShelf — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A0F1E;
+  --navy-2: #111827;
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.1);
+  --bg: #F7F8FC;
+  --white: #FFFFFF;
+  --text: #0D1224;
+  --text-2: #4A5068;
+  --text-3: #8890A8;
+  --border: #E4E7F0;
+  --error: #EF4444;
+  --success: #10B981;
+}
+
+html, body {
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ─── HEADER ─── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 2.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  background: rgba(10,15,30,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo img { height: 32px; width: auto; }
+
+/* ─── MAIN ─── */
+main {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 64px;
+}
+
+/* ─── LEFT PANEL — IP HOLDER ─── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  min-height: calc(100vh - 64px);
+}
+
+.panel-left {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 30% 40%, rgba(255,107,53,0.1) 0%, transparent 60%);
+}
+
+.panel-right {
+  background: var(--white);
+  border-left: 1px solid var(--border);
+}
+
+.panel-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ─── PANEL HEADER ─── */
+.panel-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.panel-tag.orange {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,107,53,0.25);
+  color: var(--orange);
+}
+
+.panel-tag.teal {
+  background: var(--teal-dim);
+  border: 1px solid rgba(0,212,170,0.25);
+  color: var(--teal);
+}
+
+.panel-tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.panel-tag.orange .panel-tag-dot { background: var(--orange); }
+.panel-tag.teal .panel-tag-dot { background: var(--teal); }
+
+.panel-left h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #F0F4FF;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.panel-right h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.panel-left .panel-desc {
+  font-size: 14px;
+  color: rgba(240,244,255,0.5);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.panel-right .panel-desc {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+/* ─── TABS ─── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.06);
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 1.8rem;
+}
+
+.panel-right .tabs {
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.tab {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  color: rgba(240,244,255,0.5);
+}
+
+.panel-right .tab { color: var(--text-3); }
+
+.tab.active {
+  background: var(--orange);
+  color: #fff;
+}
+
+.panel-right .tab.active.teal-active {
+  background: var(--teal);
+  color: var(--navy);
+}
+
+/* ─── FORM ─── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(240,244,255,0.7);
+}
+
+.panel-right label { color: var(--text-2); }
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.panel-left input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #F0F4FF;
+}
+
+.panel-left input::placeholder { color: rgba(240,244,255,0.25); }
+
+.panel-left input:focus {
+  border-color: rgba(255,107,53,0.5);
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+}
+
+.panel-right input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.panel-right input::placeholder { color: var(--text-3); }
+
+.panel-right input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,212,170,0.1);
+  background: var(--white);
+}
+
+/* ─── SELECT ─── */
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238890A8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.panel-left select {
+  background-color: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #F0F4FF;
+}
+
+.panel-right select {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* ─── SUBMIT BUTTON ─── */
+.btn-submit {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: transform 0.15s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-submit:hover { transform: translateY(-1px); opacity: 0.92; }
+.btn-submit:active { transform: scale(0.98); }
+
+.btn-submit.orange { background: var(--orange); color: #fff; }
+.btn-submit.teal { background: var(--teal); color: var(--navy); }
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1.2rem 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+
+.panel-left .divider::before,
+.panel-left .divider::after { background: rgba(255,255,255,0.08); }
+
+.panel-right .divider::before,
+.panel-right .divider::after { background: var(--border); }
+
+.divider span {
+  font-size: 12px;
+}
+
+.panel-left .divider span { color: rgba(240,244,255,0.3); }
+.panel-right .divider span { color: var(--text-3); }
+
+/* ─── TOGGLE TEXT ─── */
+.toggle-text {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 1.2rem;
+}
+
+.panel-left .toggle-text { color: rgba(240,244,255,0.4); }
+.panel-right .toggle-text { color: var(--text-3); }
+
+.toggle-text a {
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.panel-left .toggle-text a { color: var(--orange); }
+.panel-right .toggle-text a { color: var(--teal); }
+
+/* ─── ALERT ─── */
+.alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+.alert.error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  color: #EF4444;
+}
+
+.alert.success {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.2);
+  color: #10B981;
+}
+
+.alert.show { display: block; }
+
+/* ─── SPINNER ─── */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── BENEFITS LIST ─── */
+.benefits {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.panel-right .benefits { border-top-color: var(--border); }
+
+.benefits-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.panel-left .benefits-title { color: rgba(240,244,255,0.3); }
+.panel-right .benefits-title { color: var(--text-3); }
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.panel-left .benefit-item { color: rgba(240,244,255,0.6); }
+.panel-right .benefit-item { color: var(--text-2); }
+
+.benefit-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.benefit-check.orange { background: var(--orange-dim); color: var(--orange); }
+.benefit-check.teal { background: var(--teal-dim); color: var(--teal); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  main { grid-template-columns: 1fr; }
+  .panel { min-height: auto; padding: 2.5rem 1.5rem; }
+  .panel-left { padding-top: 3rem; }
+}
+
+/* ─── FORM VISIBILITY ─── */
+.form-section { display: none; }
+.form-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="LicenShelf" />
+  </a>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- LEFT: IP HOLDER -->
+  <div class="panel panel-left">
+    <div class="panel-content">
+
+      <div class="panel-tag orange">
+        <div class="panel-tag-dot"></div>
+        IP Holders & Rights Owners
+      </div>
+
+      <h2>Welcome back,<br>rights owner.</h2>
+      <p class="panel-desc">Manage your licenses, track royalties, and upload your IP assets.</p>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('left', 'login')">Sign In</button>
+        <button class="tab" onclick="switchTab('left', 'register')">Register</button>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert" id="left-alert"></div>
+
+      <!-- Login Form -->
+      <div class="form-section active" id="left-login">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="left-email" placeholder="you@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="left-password" placeholder="••••••••" />
+        </div>
+        <button class="btn-submit orange" onclick="handleLogin('left')">
+          <span class="spinner" id="left-login-spinner"></span>
+          Sign In to Dashboard
+        </button>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form-section" id="left-register">
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="left-name" placeholder="John Smith" />
+        </div>
+        <div class="form-group">
+          <label>Company / Studio name</label>
+          <input type="text" id="left-company" placeholder="Awesome Studio Inc." />
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="left-reg-email" placeholder="you@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="left-reg-password" placeholder="Min. 8 characters" />
+        </div>
+        <div class="form-group">
+          <label>IP Category</label>
+          <select id="left-category">
+            <option value="">Select category...</option>
+            <option value="gaming">Gaming Studio</option>
+            <option value="anime">Anime / Manga</option>
+            <option value="film">Film & TV</option>
+            <option value="sports">Sports</option>
+            <option value="music">Music</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <button class="btn-submit orange" onclick="handleRegister('left')">
+          <span class="spinner" id="left-reg-spinner"></span>
+          Create IP Holder Account
+        </button>
+      </div>
+
+      <p class="toggle-text" id="left-toggle">
+        Don't have an account? <a onclick="switchTab('left', 'register')">Register here</a>
+      </p>
+
+      <!-- Benefits -->
+      <div class="benefits">
+        <div class="benefits-title">What you get</div>
+        <div class="benefit-item">
+          <span class="benefit-check orange">✓</span>
+          Real-time royalty dashboard
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check orange">✓</span>
+          Upload & manage IP assets
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check orange">✓</span>
+          Automated monthly payments
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check orange">✓</span>
+          Brand quality control tools
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: DESIGNER -->
+  <div class="panel panel-right">
+    <div class="panel-content">
+
+      <div class="panel-tag teal">
+        <div class="panel-tag-dot"></div>
+        Independent Designers
+      </div>
+
+      <h2>Welcome back,<br>creator.</h2>
+      <p class="panel-desc">Submit your designs, track approvals, and earn royalties from every sale.</p>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active teal-active" onclick="switchTab('right', 'login')">Sign In</button>
+        <button class="tab" onclick="switchTab('right', 'register')">Register</button>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert" id="right-alert"></div>
+
+      <!-- Login Form -->
+      <div class="form-section active" id="right-login">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="right-email" placeholder="you@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="right-password" placeholder="••••••••" />
+        </div>
+        <button class="btn-submit teal" onclick="handleLogin('right')">
+          <span class="spinner" id="right-login-spinner"></span>
+          Sign In to Dashboard
+        </button>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form-section" id="right-register">
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="right-name" placeholder="Jane Doe" />
+        </div>
+        <div class="form-group">
+          <label>Portfolio / Social link (optional)</label>
+          <input type="text" id="right-portfolio" placeholder="behance.net/yourprofile" />
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="right-reg-email" placeholder="you@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="right-reg-password" placeholder="Min. 8 characters" />
+        </div>
+        <div class="form-group">
+          <label>Primary style</label>
+          <select id="right-style">
+            <option value="">Select your style...</option>
+            <option value="illustration">Digital Illustration</option>
+            <option value="fanart">Fan Art</option>
+            <option value="typography">Typography</option>
+            <option value="photography">Photography</option>
+            <option value="mixed">Mixed / Other</option>
+          </select>
+        </div>
+        <button class="btn-submit teal" onclick="handleRegister('right')">
+          <span class="spinner" id="right-reg-spinner"></span>
+          Create Designer Account
+        </button>
+      </div>
+
+      <p class="toggle-text" id="right-toggle">
+        Don't have an account? <a onclick="switchTab('right', 'register')">Register here</a>
+      </p>
+
+      <!-- Benefits -->
+      <div class="benefits">
+        <div class="benefits-title">What you get</div>
+        <div class="benefit-item">
+          <span class="benefit-check teal">✓</span>
+          50% revenue share on every sale
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check teal">✓</span>
+          Design approval within 48 hours
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check teal">✓</span>
+          Access to 8M+ POD sellers
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-check teal">✓</span>
+          Monthly earnings dashboard
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─── SUPABASE INIT ───
+const SUPABASE_URL = 'https://wcrqfujmltcvotjrwmys.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcnFmdWptbHRjdm90anJ3bXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDcyODgsImV4cCI6MjA5NDYyMzI4OH0.4szQL6x4ubMi_guj6cipKdarcTsE9SZ7_WV8wG6idCY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── TAB SWITCH ───
+function switchTab(panel, tab) {
+  const loginSection = document.getElementById(`${panel}-login`);
+  const registerSection = document.getElementById(`${panel}-register`);
+  const toggle = document.getElementById(`${panel}-toggle`);
+  const tabs = document.querySelectorAll(`.panel-${panel === 'left' ? 'left' : 'right'} .tab`);
+
+  tabs.forEach((t, i) => {
+    t.classList.remove('active');
+    if ((tab === 'login' && i === 0) || (tab === 'register' && i === 1)) {
+      t.classList.add('active');
+    }
+  });
+
+  if (tab === 'login') {
+    loginSection.classList.add('active');
+    registerSection.classList.remove('active');
+    toggle.innerHTML = `Don't have an account? <a onclick="switchTab('${panel}', 'register')">Register here</a>`;
+  } else {
+    loginSection.classList.remove('active');
+    registerSection.classList.add('active');
+    toggle.innerHTML = `Already have an account? <a onclick="switchTab('${panel}', 'login')">Sign in</a>`;
+  }
+
+  clearAlert(panel);
+}
+
+// ─── SHOW ALERT ───
+function showAlert(panel, message, type) {
+  const alert = document.getElementById(`${panel}-alert`);
+  alert.className = `alert ${type} show`;
+  alert.textContent = message;
+}
+
+function clearAlert(panel) {
+  const alert = document.getElementById(`${panel}-alert`);
+  alert.className = 'alert';
+  alert.textContent = '';
+}
+
+// ─── LOGIN ───
+async function handleLogin(panel) {
+  const email = document.getElementById(`${panel}-email`).value.trim();
+  const password = document.getElementById(`${panel}-password`).value;
+  const spinner = document.getElementById(`${panel}-login-spinner`);
+  const btn = spinner.parentElement;
+
+  if (!email || !password) {
+    showAlert(panel, 'Please fill in all fields.', 'error');
+    return;
+  }
+
+  spinner.style.display = 'block';
+  btn.disabled = true;
+  clearAlert(panel);
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  spinner.style.display = 'none';
+  btn.disabled = false;
+
+  if (error) {
+    showAlert(panel, error.message, 'error');
+    return;
+  }
+
+  // Kullanıcı tipine göre yönlendir
+  const { data: profile } = await sb.from('profiles').select('user_type').eq('id', data.user.id).single();
+
+  if (profile?.user_type === 'designer') {
+    window.location.href = 'dashboard-designer.html';
+  } else {
+    window.location.href = 'dashboard-ipholder.html';
+  }
+}
+
+// ─── REGISTER ───
+async function handleRegister(panel) {
+  const isLeft = panel === 'left';
+  const name = document.getElementById(`${panel}-name`).value.trim();
+  const email = document.getElementById(`${panel}-reg-email`).value.trim();
+  const password = document.getElementById(`${panel}-reg-password`).value;
+  const spinner = document.getElementById(`${panel}-reg-spinner`);
+  const btn = spinner.parentElement;
+
+  if (!name || !email || !password) {
+    showAlert(panel, 'Please fill in all required fields.', 'error');
+    return;
+  }
+
+  if (password.length < 8) {
+    showAlert(panel, 'Password must be at least 8 characters.', 'error');
+    return;
+  }
+
+  spinner.style.display = 'block';
+  btn.disabled = true;
+  clearAlert(panel);
+
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    spinner.style.display = 'none';
+    btn.disabled = false;
+    showAlert(panel, error.message, 'error');
+    return;
+  }
+
+  // Profile oluştur
+  const userType = isLeft ? 'ip_holder' : 'designer';
+  const company = isLeft ? document.getElementById('left-company').value.trim() : null;
+
+  await sb.from('profiles').insert({
+    id: data.user.id,
+    email: email,
+    full_name: name,
+    company_name: company,
+    user_type: userType,
+  });
+
+  spinner.style.display = 'none';
+  btn.disabled = false;
+
+  showAlert(panel, 'Account created! Redirecting...', 'success');
+
+  setTimeout(() => {
+    window.location.href = isLeft ? 'dashboard-ipholder.html' : 'dashboard-designer.html';
+  }, 1500);
+}
+</script>
+
+</body>
+</html>
