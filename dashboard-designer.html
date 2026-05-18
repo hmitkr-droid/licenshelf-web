@@ -826,7 +826,34 @@ new Chart(ctx, {
     }
   }
 });
+// ─── FILE UPLOAD ───
+document.getElementById('file-input').addEventListener('change', async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const btn = document.querySelector('.btn-teal');
+  btn.textContent = 'Uploading...';
+  btn.disabled = true;
+
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substr(2,9)}.${fileExt}`;
+
+  const { error } = await sb.storage
+    .from('designer-assets')
+    .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+  btn.textContent = 'Choose File';
+  btn.disabled = false;
+
+  if (!error) {
+    alert('✅ Design uploaded successfully! Pending admin approval.');
+  } else {
+    alert('❌ Upload failed. Please try again.');
+  }
+});
 async function saveProfile() {
   const { data: { user } } = await sb.auth.getUser();
   const name = document.getElementById('settings-name').value;
