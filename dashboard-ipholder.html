@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LicenShelf — IP Holder Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A0F1E;
+  --navy-2: #111827;
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --orange-light: rgba(255,107,53,0.06);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.1);
+  --purple: #8B5CF6;
+  --purple-dim: rgba(139,92,246,0.12);
+  --blue: #3B82F6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --bg: #F7F8FC;
+  --white: #FFFFFF;
+  --text: #0D1224;
+  --text-2: #4A5068;
+  --text-3: #8890A8;
+  --border: #E4E7F0;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --sidebar-w: 240px;
+}
+
+html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+.layout { display: flex; min-height: 100vh; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--navy);
+  min-height: 100vh;
+  position: fixed;
+  top: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-logo {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-logo img { height: 28px; width: auto; }
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 0.75rem; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+.nav-item.active { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,107,53,0.15); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 1rem 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.user-info { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; }
+
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+
+.user-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.user-role { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+.logout-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.3);
+  cursor: pointer; transition: color 0.2s, background 0.2s;
+  border: none; background: none; width: 100%; margin-top: 4px;
+}
+
+.logout-btn:hover { color: var(--error); background: rgba(239,68,68,0.08); }
+
+/* ─── MAIN ─── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 40;
+}
+
+.topbar-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.topbar-date { font-size: 13px; color: var(--text-3); }
+
+.ip-badge {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,107,53,0.2);
+  color: var(--orange);
+  font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+
+/* ─── PAGES ─── */
+.page { padding: 2rem; display: none; }
+.page.active { display: block; }
+
+/* ─── STATS ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+
+.stat-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 1rem;
+}
+
+.stat-icon.orange { background: var(--orange-dim); }
+.stat-icon.teal { background: var(--teal-dim); }
+.stat-icon.purple { background: var(--purple-dim); }
+.stat-icon.blue { background: var(--blue-dim); }
+
+.stat-value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; display: block; }
+.stat-label { font-size: 13px; color: var(--text-3); margin-top: 4px; display: block; }
+.stat-change { font-size: 12px; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.stat-change.up { color: var(--success); }
+
+/* ─── CARDS ─── */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+
+.card-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.card-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.card-action { font-size: 13px; color: var(--orange); cursor: pointer; font-weight: 500; }
+.card-body { padding: 1.5rem; }
+
+/* ─── GRID ─── */
+.grid-2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+
+/* ─── CHART ─── */
+.chart-wrap { position: relative; height: 220px; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  text-align: left;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3);
+  padding: 0 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+td { padding: 1rem 1.5rem; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+
+.td-main { font-weight: 500; color: var(--text); font-size: 14px; }
+.td-sub { font-size: 12px; color: var(--text-3); }
+
+/* ─── BADGES ─── */
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
+.badge.success { background: rgba(16,185,129,0.1); color: var(--success); }
+.badge.warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.badge.info { background: var(--orange-dim); color: var(--orange); }
+
+/* ─── UPLOAD AREA ─── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-area:hover { border-color: var(--orange); background: var(--orange-light); }
+.upload-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.upload-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+.upload-desc { font-size: 13px; color: var(--text-3); margin-bottom: 1.5rem; }
+
+.btn-upload {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-upload:hover { opacity: 0.9; }
+
+/* ─── LICENSE CARDS ─── */
+.license-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+.license-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.license-card:hover { border-color: var(--orange); transform: translateY(-2px); }
+
+.license-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+
+.license-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--orange-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.license-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.license-category { font-size: 12px; color: var(--text-3); }
+
+.license-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.license-stat { background: var(--white); border-radius: 8px; padding: 8px 10px; }
+.license-stat-value { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
+.license-stat-label { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+/* ─── ROYALTY BREAKDOWN ─── */
+.royalty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.royalty-row:last-child { border-bottom: none; }
+.royalty-label { font-size: 14px; color: var(--text-2); }
+.royalty-value { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+.royalty-value.green { color: var(--success); }
+.royalty-value.orange { color: var(--orange); }
+.royalty-value.gray { color: var(--text-3); }
+
+/* ─── FORM ─── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+
+label { font-size: 13px; font-weight: 500; color: var(--text-2); }
+
+input[type="text"], input[type="email"], textarea, select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus { border-color: var(--orange); background: var(--white); }
+textarea { resize: vertical; min-height: 80px; }
+
+.btn-save {
+  background: var(--orange); color: #fff;
+  border: none; padding: 11px 24px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+}
+
+.btn-save:hover { opacity: 0.9; }
+
+/* ─── SECTION HEADER ─── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+.section-sub { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+
+/* ─── EMPTY STATE ─── */
+.empty-state { text-align: center; padding: 3rem 2rem; }
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+.empty-desc { font-size: 13px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="LicenShelf" />
+    </div>
+
+    <div class="sidebar-label">Dashboard</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showPage('overview')">
+        <span class="nav-icon">📊</span> Overview
+      </button>
+      <button class="nav-item" onclick="showPage('licenses')">
+        <span class="nav-icon">📜</span> My Licenses
+      </button>
+      <button class="nav-item" onclick="showPage('assets')">
+        <span class="nav-icon">🖼️</span> Upload Assets
+      </button>
+      <button class="nav-item" onclick="showPage('sales')">
+        <span class="nav-icon">📈</span> Sales & Reports
+      </button>
+      <button class="nav-item" onclick="showPage('royalties')">
+        <span class="nav-icon">💰</span> Royalty Payments
+      </button>
+      <button class="nav-item" onclick="showPage('settings')">
+        <span class="nav-icon">⚙️</span> Account Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div>
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-role">IP Holder</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <span>🚪</span> Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Overview</div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="current-date"></div>
+        <div class="ip-badge">IP HOLDER</div>
+      </div>
+    </div>
+
+    <!-- ─── OVERVIEW ─── -->
+    <div class="page active" id="page-overview">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Welcome back 👋</div>
+          <div class="section-sub">Here's your earnings and performance summary.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orange">💸</div>
+          <span class="stat-value">$4,280</span>
+          <span class="stat-label">Total Earnings</span>
+          <div class="stat-change up">↑ 22% from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon teal">📅</div>
+          <span class="stat-value">$820</span>
+          <span class="stat-label">This Month</span>
+          <div class="stat-change up">↑ 14% from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">📦</div>
+          <span class="stat-value">3,240</span>
+          <span class="stat-label">Total Sales</span>
+          <div class="stat-change up">↑ 18% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📜</div>
+          <span class="stat-value">7</span>
+          <span class="stat-label">Active Licenses</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Monthly Earnings</div>
+            <span style="font-size:12px;color:var(--success)">+22% growth</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap">
+              <canvas id="earningsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Royalty Breakdown</div>
+          </div>
+          <div class="card-body">
+            <div class="royalty-row">
+              <span class="royalty-label">Total Collected</span>
+              <span class="royalty-value orange">$4,280.00</span>
+            </div>
+            <div class="royalty-row">
+              <span class="royalty-label">Already Paid</span>
+              <span class="royalty-value green">$3,460.00</span>
+            </div>
+            <div class="royalty-row">
+              <span class="royalty-label">Pending Payment</span>
+              <span class="royalty-value" style="color:var(--warning)">$820.00</span>
+            </div>
+            <div class="royalty-row">
+              <span class="royalty-label">Next Payment Date</span>
+              <span class="royalty-value gray">Jun 1, 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Sales</div>
+          <span class="card-action" onclick="showPage('sales')">View all</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>License Used</th>
+                <th>Platform</th>
+                <th>Sale Price</th>
+                <th>Your Share</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="td-main">Canvas Print — 16x20"</div></td>
+                <td>Dragon Quest — Char. Set</td>
+                <td>Etsy</td>
+                <td>$42.00</td>
+                <td style="color:var(--success);font-weight:600">$8.82</td>
+                <td>Today</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Unisex T-Shirt</div></td>
+                <td>Indie Pack Vol.1</td>
+                <td>Amazon</td>
+                <td>$28.00</td>
+                <td style="color:var(--success);font-weight:600">$5.88</td>
+                <td>Yesterday</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Mug 11oz</div></td>
+                <td>Dragon Quest — Char. Set</td>
+                <td>Shopify</td>
+                <td>$18.00</td>
+                <td style="color:var(--success);font-weight:600">$3.78</td>
+                <td>2 days ago</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Hoodie</div></td>
+                <td>Studio Ghibli Fan</td>
+                <td>Etsy</td>
+                <td>$65.00</td>
+                <td style="color:var(--success);font-weight:600">$13.65</td>
+                <td>3 days ago</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── LICENSES ─── -->
+    <div class="page" id="page-licenses">
+      <div class="section-header">
+        <div>
+          <div class="section-title">My Licenses</div>
+          <div class="section-sub">All your IP licenses registered on Licenshelf.</div>
+        </div>
+      </div>
+
+      <div class="license-grid">
+        <div class="license-card">
+          <div class="license-card-header">
+            <div class="license-icon">🎮</div>
+            <div>
+              <div class="license-name">Dragon Quest</div>
+              <div class="license-category">Gaming · 30% royalty</div>
+            </div>
+          </div>
+          <div class="license-stats">
+            <div class="license-stat">
+              <div class="license-stat-value">48</div>
+              <div class="license-stat-label">Assets</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value">1,840</div>
+              <div class="license-stat-label">Sales</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value" style="color:var(--success)">$2,460</div>
+              <div class="license-stat-label">Earned</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value"><span class="badge success">Active</span></div>
+              <div class="license-stat-label">Status</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="license-card">
+          <div class="license-card-header">
+            <div class="license-icon">🎌</div>
+            <div>
+              <div class="license-name">Studio Ghibli Fan</div>
+              <div class="license-category">Anime · 30% royalty</div>
+            </div>
+          </div>
+          <div class="license-stats">
+            <div class="license-stat">
+              <div class="license-stat-value">32</div>
+              <div class="license-stat-label">Assets</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value">980</div>
+              <div class="license-stat-label">Sales</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value" style="color:var(--success)">$1,280</div>
+              <div class="license-stat-label">Earned</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value"><span class="badge success">Active</span></div>
+              <div class="license-stat-label">Status</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="license-card">
+          <div class="license-card-header">
+            <div class="license-icon">🕹️</div>
+            <div>
+              <div class="license-name">Indie Pack Vol.1</div>
+              <div class="license-category">Gaming · 25% royalty</div>
+            </div>
+          </div>
+          <div class="license-stats">
+            <div class="license-stat">
+              <div class="license-stat-value">18</div>
+              <div class="license-stat-label">Assets</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value">420</div>
+              <div class="license-stat-label">Sales</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value" style="color:var(--success)">$540</div>
+              <div class="license-stat-label">Earned</div>
+            </div>
+            <div class="license-stat">
+              <div class="license-stat-value"><span class="badge warning">Review</span></div>
+              <div class="license-stat-label">Status</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── UPLOAD ASSETS ─── -->
+    <div class="page" id="page-assets">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Upload Assets</div>
+          <div class="section-sub">Add new images to your license library.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="upload-area" onclick="document.getElementById('file-input').click()">
+            <div class="upload-icon">🖼️</div>
+            <div class="upload-title">Drop your images here</div>
+            <div class="upload-desc">PNG, JPG, SVG supported · Max 10MB per file · Min 1000px wide</div>
+            <button class="btn-upload">Choose Files</button>
+            <input type="file" id="file-input" multiple accept="image/*" style="display:none" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Asset Details</div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>License</label>
+              <select>
+                <option>Dragon Quest — Character Set</option>
+                <option>Studio Ghibli Fan</option>
+                <option>Indie Pack Vol.1</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Asset Category</label>
+              <select>
+                <option>Character Illustration</option>
+                <option>Logo / Icon</option>
+                <option>Scene / Background</option>
+                <option>Pattern</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Asset Name</label>
+            <input type="text" placeholder="e.g. Dragon Quest Hero — Battle Pose" />
+          </div>
+          <div class="form-group">
+            <label>Description (optional)</label>
+            <textarea placeholder="Describe what's in this asset..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Usage Restrictions (optional)</label>
+            <input type="text" placeholder="e.g. Not for political content" />
+          </div>
+          <button class="btn-save">Submit for Approval →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SALES ─── -->
+    <div class="page" id="page-sales">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Sales & Reports</div>
+          <div class="section-sub">Detailed breakdown of all product sales using your IP.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orange">📦</div>
+          <span class="stat-value">3,240</span>
+          <span class="stat-label">Total Sales</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon teal">📅</div>
+          <span class="stat-value">412</span>
+          <span class="stat-label">This Month</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">🛒</div>
+          <span class="stat-value">$28.40</span>
+          <span class="stat-label">Avg. Sale Price</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">🌍</div>
+          <span class="stat-value">24</span>
+          <span class="stat-label">Countries</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Sales</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>License</th>
+                <th>Platform</th>
+                <th>Sale Price</th>
+                <th>Your Share (70%)</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="td-main">Canvas Print 16x20"</div></td>
+                <td>Dragon Quest</td>
+                <td>Etsy</td>
+                <td>$42.00</td>
+                <td style="color:var(--success);font-weight:600">$8.82</td>
+                <td>May 18, 2026</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Unisex T-Shirt</div></td>
+                <td>Indie Pack Vol.1</td>
+                <td>Amazon</td>
+                <td>$28.00</td>
+                <td style="color:var(--success);font-weight:600">$5.88</td>
+                <td>May 17, 2026</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Mug 11oz</div></td>
+                <td>Dragon Quest</td>
+                <td>Shopify</td>
+                <td>$18.00</td>
+                <td style="color:var(--success);font-weight:600">$3.78</td>
+                <td>May 16, 2026</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Hoodie</div></td>
+                <td>Studio Ghibli Fan</td>
+                <td>Etsy</td>
+                <td>$65.00</td>
+                <td style="color:var(--success);font-weight:600">$13.65</td>
+                <td>May 15, 2026</td>
+              </tr>
+              <tr>
+                <td><div class="td-main">Poster A2</div></td>
+                <td>Dragon Quest</td>
+                <td>Amazon</td>
+                <td>$24.00</td>
+                <td style="color:var(--success);font-weight:600">$5.04</td>
+                <td>May 14, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ROYALTIES ─── -->
+    <div class="page" id="page-royalties">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Royalty Payments</div>
+          <div class="section-sub">Track all your earnings and payment history.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orange">💸</div>
+          <span class="stat-value">$4,280</span>
+          <span class="stat-label">Total Earned</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon teal">✅</div>
+          <span class="stat-value">$3,460</span>
+          <span class="stat-label">Total Paid</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">⏳</div>
+          <span class="stat-value">$820</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📅</div>
+          <span class="stat-value">Jun 1</span>
+          <span class="stat-label">Next Payment</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Payment History</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Sales</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>May 2026</td>
+                <td>412</td>
+                <td style="font-weight:600;color:var(--warning)">$820.00</td>
+                <td><span class="badge warning">Pending</span></td>
+                <td>Jun 1, 2026</td>
+              </tr>
+              <tr>
+                <td>April 2026</td>
+                <td>380</td>
+                <td style="font-weight:600;color:var(--success)">$760.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>May 1, 2026</td>
+              </tr>
+              <tr>
+                <td>March 2026</td>
+                <td>420</td>
+                <td style="font-weight:600;color:var(--success)">$840.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>Apr 1, 2026</td>
+              </tr>
+              <tr>
+                <td>February 2026</td>
+                <td>310</td>
+                <td style="font-weight:600;color:var(--success)">$620.00</td>
+                <td><span class="badge success">Paid</span></td>
+                <td>Mar 1, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div class="page" id="page-settings">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Account Settings</div>
+          <div class="section-sub">Manage your profile and payment information.</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Profile Information</div>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="settings-name" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+              <label>Company / Studio Name</label>
+              <input type="text" id="settings-company" placeholder="Your company" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="settings-email" placeholder="your@email.com" disabled style="opacity:0.6" />
+            </div>
+            <div class="form-group">
+              <label>Website (optional)</label>
+              <input type="text" placeholder="https://yoursite.com" />
+            </div>
+            <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Payment Details</div>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Preferred Payment Method</label>
+              <select>
+                <option>Bank Transfer (SWIFT)</option>
+                <option>Wise</option>
+                <option>PayPal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Bank / Account Name</label>
+              <input type="text" placeholder="Bank or account holder name" />
+            </div>
+            <div class="form-group">
+              <label>IBAN / Account Number</label>
+              <input type="text" placeholder="TR00 0000 0000 0000 0000 00" />
+            </div>
+            <div class="form-group">
+              <label>SWIFT / BIC Code</label>
+              <input type="text" placeholder="XXXXTRXX" />
+            </div>
+            <button class="btn-save">Save Payment Info</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://wcrqfujmltcvotjrwmys.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcnFmdWptbHRjdm90anJ3bXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDcyODgsImV4cCI6MjA5NDYyMzI4OH0.4szQL6x4ubMi_guj6cipKdarcTsE9SZ7_WV8wG6idCY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Date
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+
+// Load user
+async function loadUser() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (profile) {
+    const name = profile.full_name || profile.company_name || user.email;
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('settings-name').value = profile.full_name || '';
+    document.getElementById('settings-company').value = profile.company_name || '';
+    document.getElementById('settings-email').value = user.email;
+  }
+}
+
+loadUser();
+
+// Navigation
+const pages = ['overview','licenses','assets','sales','royalties','settings'];
+const titles = {
+  overview: 'Overview',
+  licenses: 'My Licenses',
+  assets: 'Upload Assets',
+  sales: 'Sales & Reports',
+  royalties: 'Royalty Payments',
+  settings: 'Account Settings'
+};
+
+function showPage(page) {
+  pages.forEach(p => document.getElementById(`page-${p}`)?.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  document.getElementById('page-title').textContent = titles[page];
+  event.currentTarget.classList.add('active');
+}
+
+// Chart
+const ctx = document.getElementById('earningsChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    datasets: [{
+      label: 'Earnings ($)',
+      data: [280, 420, 560, 620, 740, 700, 820],
+      borderColor: '#FF6B35',
+      backgroundColor: 'rgba(255,107,53,0.08)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true,
+      pointBackgroundColor: '#FF6B35',
+      pointRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#8890A8', font: { size: 11 } } },
+      y: { grid: { color: '#F0F2F8' }, ticks: { color: '#8890A8', font: { size: 11 }, callback: v => '$' + v } }
+    }
+  }
+});
+
+// Save profile
+async function saveProfile() {
+  const { data: { user } } = await sb.auth.getUser();
+  const name = document.getElementById('settings-name').value;
+  const company = document.getElementById('settings-company').value;
+  await sb.from('profiles').update({ full_name: name, company_name: company }).eq('id', user.id);
+  alert('Profile saved!');
+}
+
+// Logout
+async function handleLogout() {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
+}
+</script>
+
+</body>
+</html>
