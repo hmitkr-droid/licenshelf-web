@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LicenShelf — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A0F1E;
+  --navy-2: #111827;
+  --navy-3: #1a2438;
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.1);
+  --purple: #8B5CF6;
+  --purple-dim: rgba(139,92,246,0.12);
+  --blue: #3B82F6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --bg: #F7F8FC;
+  --white: #FFFFFF;
+  --text: #0D1224;
+  --text-2: #4A5068;
+  --text-3: #8890A8;
+  --border: #E4E7F0;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --sidebar-w: 240px;
+}
+
+html, body {
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ─── LAYOUT ─── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--navy);
+  min-height: 100vh;
+  position: fixed;
+  top: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-logo {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-logo img { height: 28px; width: auto; }
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9);
+}
+
+.nav-item.active {
+  background: var(--orange-dim);
+  color: var(--orange);
+  border: 1px solid rgba(255,107,53,0.15);
+}
+
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--orange);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 1rem 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+}
+
+.user-role {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  border: none;
+  background: none;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.logout-btn:hover {
+  color: var(--error);
+  background: rgba(239,68,68,0.08);
+}
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── TOP BAR ─── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-date {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.admin-badge {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,107,53,0.2);
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+
+/* ─── PAGE CONTENT ─── */
+.page {
+  padding: 2rem;
+  display: none;
+}
+
+.page.active { display: block; }
+
+/* ─── STATS GRID ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 1rem;
+}
+
+.stat-icon.orange { background: var(--orange-dim); }
+.stat-icon.teal { background: var(--teal-dim); }
+.stat-icon.purple { background: var(--purple-dim); }
+.stat-icon.blue { background: var(--blue-dim); }
+
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  display: block;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-top: 4px;
+  display: block;
+}
+
+.stat-change {
+  font-size: 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-change.up { color: var(--success); }
+.stat-change.down { color: var(--error); }
+
+/* ─── GRID 2 COL ─── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.card-action {
+  font-size: 13px;
+  color: var(--orange);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.card-body { padding: 1.5rem; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 0 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 1rem 1.5rem;
+  font-size: 14px;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: var(--bg); }
+
+.td-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.td-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.td-avatar.orange { background: var(--orange); }
+.td-avatar.teal { background: var(--teal); color: var(--navy); }
+.td-avatar.purple { background: var(--purple); }
+
+.td-main { font-weight: 500; color: var(--text); font-size: 14px; }
+.td-sub { font-size: 12px; color: var(--text-3); }
+
+/* ─── BADGES ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.badge.success { background: rgba(16,185,129,0.1); color: var(--success); }
+.badge.warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.badge.error { background: rgba(239,68,68,0.1); color: var(--error); }
+.badge.info { background: var(--blue-dim); color: var(--blue); }
+
+/* ─── ACTION BUTTONS ─── */
+.action-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover { opacity: 0.8; }
+.action-btn.approve { background: rgba(16,185,129,0.1); color: var(--success); }
+.action-btn.reject { background: rgba(239,68,68,0.1); color: var(--error); }
+.action-btn.view { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
+
+.action-group { display: flex; gap: 6px; }
+
+/* ─── CHART ─── */
+.chart-wrap {
+  position: relative;
+  height: 200px;
+}
+
+/* ─── QUICK ACTIONS ─── */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-decoration: none;
+}
+
+.quick-action:hover {
+  border-color: var(--orange);
+  background: var(--orange-dim);
+}
+
+.quick-action-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.quick-action-icon.orange { background: var(--orange-dim); }
+.quick-action-icon.teal { background: var(--teal-dim); }
+.quick-action-icon.purple { background: var(--purple-dim); }
+
+.quick-action-text { font-size: 13px; font-weight: 500; color: var(--text); }
+.quick-action-sub { font-size: 11px; color: var(--text-3); }
+
+/* ─── PENDING ITEMS ─── */
+.pending-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pending-item:last-child { border-bottom: none; }
+
+.pending-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--bg);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.pending-info { flex: 1; }
+.pending-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.pending-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+/* ─── SECTION HEADER ─── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.section-sub {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+/* ─── ROYALTY SUMMARY ─── */
+.royalty-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.royalty-item {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.royalty-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.royalty-label { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main { margin-left: 0; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="LicenShelf" />
+    </div>
+
+    <div class="sidebar-label">Main</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" onclick="showPage('overview')">
+        <span class="nav-icon">📊</span> Overview
+      </a>
+      <a class="nav-item" onclick="showPage('approvals')">
+        <span class="nav-icon">✅</span> Approvals
+        <span class="nav-badge">4</span>
+      </a>
+      <a class="nav-item" onclick="showPage('licenses')">
+        <span class="nav-icon">📜</span> Licenses
+      </a>
+      <a class="nav-item" onclick="showPage('assets')">
+        <span class="nav-icon">🖼️</span> Assets / Library
+      </a>
+    </nav>
+
+    <div class="sidebar-label">Users</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" onclick="showPage('ipholders')">
+        <span class="nav-icon">🏢</span> IP Holders
+      </a>
+      <a class="nav-item" onclick="showPage('designers')">
+        <span class="nav-icon">🎨</span> Designers
+      </a>
+    </nav>
+
+    <div class="sidebar-label">Finance</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" onclick="showPage('royalties')">
+        <span class="nav-icon">💰</span> Royalties
+      </a>
+      <a class="nav-item" onclick="showPage('sales')">
+        <span class="nav-icon">📈</span> Sales
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-info">
+        <div class="user-avatar">H</div>
+        <div>
+          <div class="user-name">Hamit Kara</div>
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <span>🚪</span> Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Overview</div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="current-date"></div>
+        <div class="admin-badge">ADMIN</div>
+      </div>
+    </div>
+
+    <!-- ─── OVERVIEW PAGE ─── -->
+    <div class="page active" id="page-overview">
+      <div style="padding: 2rem;">
+
+        <div class="section-header">
+          <div>
+            <div class="section-title">Good morning, Hamit 👋</div>
+            <div class="section-sub">Here's what's happening on Licenshelf today.</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon orange">💸</div>
+            <span class="stat-value">$24,381</span>
+            <span class="stat-label">Total Platform Revenue</span>
+            <div class="stat-change up">↑ 18.2% from last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal">📦</div>
+            <span class="stat-value">12,450</span>
+            <span class="stat-label">Total Sales (All Time)</span>
+            <div class="stat-change up">↑ 24.5% from last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">📜</div>
+            <span class="stat-value">38</span>
+            <span class="stat-label">Active Licenses</span>
+            <div class="stat-change up">↑ 3 new this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <span class="stat-value">214</span>
+            <span class="stat-label">Registered Users</span>
+            <div class="stat-change up">↑ 31 new this week</div>
+          </div>
+        </div>
+
+        <!-- Chart + Quick Actions -->
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Monthly Revenue</div>
+              <span class="badge success">+18.2%</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrap">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Quick Actions</div>
+            </div>
+            <div class="card-body">
+              <div class="quick-actions">
+                <a class="quick-action" onclick="showPage('approvals')">
+                  <div class="quick-action-icon orange">✅</div>
+                  <div>
+                    <div class="quick-action-text">Review Approvals</div>
+                    <div class="quick-action-sub">4 pending items</div>
+                  </div>
+                </a>
+                <a class="quick-action" onclick="showPage('licenses')">
+                  <div class="quick-action-icon teal">📜</div>
+                  <div>
+                    <div class="quick-action-text">Add New License</div>
+                    <div class="quick-action-sub">Expand the library</div>
+                  </div>
+                </a>
+                <a class="quick-action" onclick="showPage('royalties')">
+                  <div class="quick-action-icon purple">💰</div>
+                  <div>
+                    <div class="quick-action-text">Process Royalties</div>
+                    <div class="quick-action-sub">$8,420 pending</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Users + Pending -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Users</div>
+              <a class="card-action" onclick="showPage('ipholders')">View all</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="td-name">
+                        <div class="td-avatar orange">P</div>
+                        <div>
+                          <div class="td-main">Peak Games</div>
+                          <div class="td-sub">peak@games.com</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge info">IP Holder</span></td>
+                    <td><span class="badge warning">Pending</span></td>
+                    <td>Today</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="td-name">
+                        <div class="td-avatar teal">A</div>
+                        <div>
+                          <div class="td-main">Aiko Tanaka</div>
+                          <div class="td-sub">aiko@art.jp</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge" style="background:var(--teal-dim);color:var(--teal)">Designer</span></td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>Yesterday</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="td-name">
+                        <div class="td-avatar purple">S</div>
+                        <div>
+                          <div class="td-main">Studio Nexus</div>
+                          <div class="td-sub">hello@nexus.co</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge info">IP Holder</span></td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>3 days ago</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pending Approvals</div>
+              <a class="card-action" onclick="showPage('approvals')">View all</a>
+            </div>
+            <div class="card-body">
+              <div class="pending-item">
+                <div class="pending-thumb">🎮</div>
+                <div class="pending-info">
+                  <div class="pending-name">Dragon Quest — Character Set</div>
+                  <div class="pending-meta">IP Holder · Submitted 2h ago</div>
+                </div>
+                <div class="action-group">
+                  <button class="action-btn approve">✓</button>
+                  <button class="action-btn reject">✕</button>
+                </div>
+              </div>
+              <div class="pending-item">
+                <div class="pending-thumb">🎨</div>
+                <div class="pending-info">
+                  <div class="pending-name">Cyberpunk Fan Art Series</div>
+                  <div class="pending-meta">Designer · Submitted 5h ago</div>
+                </div>
+                <div class="action-group">
+                  <button class="action-btn approve">✓</button>
+                  <button class="action-btn reject">✕</button>
+                </div>
+              </div>
+              <div class="pending-item">
+                <div class="pending-thumb">🖼️</div>
+                <div class="pending-info">
+                  <div class="pending-name">Van Gogh — Starry Night Set</div>
+                  <div class="pending-meta">Public Domain · Submitted 1d ago</div>
+                </div>
+                <div class="action-group">
+                  <button class="action-btn approve">✓</button>
+                  <button class="action-btn reject">✕</button>
+                </div>
+              </div>
+              <div class="pending-item">
+                <div class="pending-thumb">🎮</div>
+                <div class="pending-info">
+                  <div class="pending-name">Indie Studio — Logo Pack</div>
+                  <div class="pending-meta">IP Holder · Submitted 2d ago</div>
+                </div>
+                <div class="action-group">
+                  <button class="action-btn approve">✓</button>
+                  <button class="action-btn reject">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Royalty Summary -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Royalty Summary — This Month</div>
+            <a class="card-action" onclick="showPage('royalties')">Full report</a>
+          </div>
+          <div class="card-body">
+            <div class="royalty-grid">
+              <div class="royalty-item">
+                <div class="royalty-amount" style="color:var(--orange)">$24,381</div>
+                <div class="royalty-label">Total Royalties Collected</div>
+              </div>
+              <div class="royalty-item">
+                <div class="royalty-amount" style="color:var(--success)">$17,067</div>
+                <div class="royalty-label">Paid to IP Holders (70%)</div>
+              </div>
+              <div class="royalty-item">
+                <div class="royalty-amount" style="color:var(--teal)">$7,314</div>
+                <div class="royalty-label">Licenshelf Revenue (30%)</div>
+              </div>
+              <div class="royalty-item">
+                <div class="royalty-amount" style="color:var(--warning)">$8,420</div>
+                <div class="royalty-label">Pending Payments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── APPROVALS PAGE ─── -->
+    <div class="page" id="page-approvals">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Pending Approvals</div>
+            <div class="section-sub">4 items waiting for your review.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Submitted by</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="td-name"><div class="pending-thumb">🎮</div><div><div class="td-main">Dragon Quest — Character Set</div><div class="td-sub">12 images · Gaming IP</div></div></div></td>
+                  <td>Square Enix</td>
+                  <td><span class="badge info">IP Holder</span></td>
+                  <td>2h ago</td>
+                  <td><div class="action-group"><button class="action-btn approve">Approve</button><button class="action-btn reject">Reject</button><button class="action-btn view">View</button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="pending-thumb">🎨</div><div><div class="td-main">Cyberpunk Fan Art Series</div><div class="td-sub">8 images · Digital Illustration</div></div></div></td>
+                  <td>Aiko Tanaka</td>
+                  <td><span class="badge" style="background:var(--teal-dim);color:var(--teal)">Designer</span></td>
+                  <td>5h ago</td>
+                  <td><div class="action-group"><button class="action-btn approve">Approve</button><button class="action-btn reject">Reject</button><button class="action-btn view">View</button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="pending-thumb">🖼️</div><div><div class="td-main">Van Gogh — Starry Night Set</div><div class="td-sub">6 images · Public Domain</div></div></div></td>
+                  <td>Admin Upload</td>
+                  <td><span class="badge" style="background:var(--purple-dim);color:var(--purple)">Public Domain</span></td>
+                  <td>1d ago</td>
+                  <td><div class="action-group"><button class="action-btn approve">Approve</button><button class="action-btn reject">Reject</button><button class="action-btn view">View</button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="pending-thumb">🎮</div><div><div class="td-main">Indie Studio — Logo Pack</div><div class="td-sub">4 images · Gaming IP</div></div></div></td>
+                  <td>Pixel Works</td>
+                  <td><span class="badge info">IP Holder</span></td>
+                  <td>2d ago</td>
+                  <td><div class="action-group"><button class="action-btn approve">Approve</button><button class="action-btn reject">Reject</button><button class="action-btn view">View</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── IP HOLDERS PAGE ─── -->
+    <div class="page" id="page-ipholders">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">IP Holders</div>
+            <div class="section-sub">All registered rights owners on the platform.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Category</th>
+                  <th>Licenses</th>
+                  <th>Total Earned</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="td-name"><div class="td-avatar orange">P</div><div><div class="td-main">Peak Games</div><div class="td-sub">peak@games.com</div></div></div></td>
+                  <td>Gaming</td>
+                  <td>3</td>
+                  <td>$0.00</td>
+                  <td><span class="badge warning">Pending</span></td>
+                  <td><div class="action-group"><button class="action-btn approve">Activate</button><button class="action-btn view">View</button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="td-avatar purple">S</div><div><div class="td-main">Studio Nexus</div><div class="td-sub">hello@nexus.co</div></div></div></td>
+                  <td>Anime</td>
+                  <td>7</td>
+                  <td>$4,280.00</td>
+                  <td><span class="badge success">Active</span></td>
+                  <td><div class="action-group"><button class="action-btn reject">Suspend</button><button class="action-btn view">View</button></div></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="td-avatar blue">K</div><div><div class="td-main">Kaiju Creative</div><div class="td-sub">info@kaiju.jp</div></div></div></td>
+                  <td>Gaming</td>
+                  <td>12</td>
+                  <td>$12,950.00</td>
+                  <td><span class="badge success">Active</span></td>
+                  <td><div class="action-group"><button class="action-btn reject">Suspend</button><button class="action-btn view">View</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── DESIGNERS PAGE ─── -->
+    <div class="page" id="page-designers">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Designers</div>
+            <div class="section-sub">All registered independent creators.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Designer</th>
+                  <th>Style</th>
+                  <th>Designs</th>
+                  <th>Approved</th>
+                  <th>Earned</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="td-name"><div class="td-avatar teal">A</div><div><div class="td-main">Aiko Tanaka</div><div class="td-sub">aiko@art.jp</div></div></div></td>
+                  <td>Fan Art</td>
+                  <td>24</td>
+                  <td>18</td>
+                  <td>$1,240.00</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><div class="td-name"><div class="td-avatar orange">M</div><div><div class="td-main">Marco Silva</div><div class="td-sub">marco@design.com</div></div></div></td>
+                  <td>Illustration</td>
+                  <td>12</td>
+                  <td>9</td>
+                  <td>$680.00</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── LICENSES PAGE ─── -->
+    <div class="page" id="page-licenses">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">License Management</div>
+            <div class="section-sub">All active and pending IP licenses.</div>
+          </div>
+          <button class="action-btn approve" style="padding:10px 20px;font-size:14px;">+ Add License</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>IP Name</th>
+                  <th>Holder</th>
+                  <th>Category</th>
+                  <th>Royalty Rate</th>
+                  <th>Assets</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="td-main">🎮 Dragon Quest</div></td>
+                  <td>Square Enix</td>
+                  <td>Gaming</td>
+                  <td>30%</td>
+                  <td>48</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><div class="td-main">🎌 Studio Ghibli Fan</div></td>
+                  <td>Studio Nexus</td>
+                  <td>Anime</td>
+                  <td>30%</td>
+                  <td>32</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><div class="td-main">🕹️ Indie Pack Vol.1</div></td>
+                  <td>Kaiju Creative</td>
+                  <td>Gaming</td>
+                  <td>25%</td>
+                  <td>18</td>
+                  <td><span class="badge warning">Review</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ROYALTIES PAGE ─── -->
+    <div class="page" id="page-royalties">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Royalty Management</div>
+            <div class="section-sub">Track and process all royalty payments.</div>
+          </div>
+          <button class="action-btn approve" style="padding:10px 20px;font-size:14px;">Process Payments</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon orange">💸</div>
+            <span class="stat-value">$24,381</span>
+            <span class="stat-label">Total Collected</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal">✅</div>
+            <span class="stat-value">$15,961</span>
+            <span class="stat-label">Already Paid Out</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">⏳</div>
+            <span class="stat-value">$8,420</span>
+            <span class="stat-label">Pending Payment</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">🏦</div>
+            <span class="stat-value">$7,314</span>
+            <span class="stat-label">Licenshelf Share</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Pending Royalty Payments</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>IP Holder</th>
+                  <th>Period</th>
+                  <th>Sales</th>
+                  <th>Amount Due</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="td-main">Kaiju Creative</div></td>
+                  <td>April 2026</td>
+                  <td>412</td>
+                  <td style="font-weight:600;color:var(--warning)">$5,820.00</td>
+                  <td><span class="badge warning">Pending</span></td>
+                  <td><button class="action-btn approve">Pay Now</button></td>
+                </tr>
+                <tr>
+                  <td><div class="td-main">Studio Nexus</div></td>
+                  <td>April 2026</td>
+                  <td>184</td>
+                  <td style="font-weight:600;color:var(--warning)">$2,600.00</td>
+                  <td><span class="badge warning">Pending</span></td>
+                  <td><button class="action-btn approve">Pay Now</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SALES PAGE ─── -->
+    <div class="page" id="page-sales">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Sales Overview</div>
+            <div class="section-sub">All transactions on the platform.</div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon orange">📦</div>
+            <span class="stat-value">12,450</span>
+            <span class="stat-label">Total Sales</span>
+            <div class="stat-change up">↑ 24.5% this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal">📅</div>
+            <span class="stat-value">1,840</span>
+            <span class="stat-label">Sales This Month</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">💵</div>
+            <span class="stat-value">$19.68</span>
+            <span class="stat-label">Avg. Product Value</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">🌍</div>
+            <span class="stat-value">42</span>
+            <span class="stat-label">Countries</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ASSETS PAGE ─── -->
+    <div class="page" id="page-assets">
+      <div style="padding: 2rem;">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Asset Library</div>
+            <div class="section-sub">All approved images in the Licenshelf catalog.</div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon orange">🖼️</div>
+            <span class="stat-value">486</span>
+            <span class="stat-label">Total Assets</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal">✅</div>
+            <span class="stat-value">412</span>
+            <span class="stat-label">Approved</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">⏳</div>
+            <span class="stat-value">4</span>
+            <span class="stat-label">Pending Review</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">❌</div>
+            <span class="stat-value">70</span>
+            <span class="stat-label">Rejected</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── SUPABASE ───
+const SUPABASE_URL = 'https://wcrqfujmltcvotjrwmys.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjcnFmdWptbHRjdm90anJ3bXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDcyODgsImV4cCI6MjA5NDYyMzI4OH0.4szQL6x4ubMi_guj6cipKdarcTsE9SZ7_WV8wG6idCY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── DATE ───
+const now = new Date();
+document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+
+// ─── PAGE NAVIGATION ───
+const pages = ['overview','approvals','licenses','assets','ipholders','designers','royalties','sales'];
+const titles = {
+  overview: 'Overview',
+  approvals: 'Pending Approvals',
+  licenses: 'License Management',
+  assets: 'Asset Library',
+  ipholders: 'IP Holders',
+  designers: 'Designers',
+  royalties: 'Royalty Management',
+  sales: 'Sales Overview'
+};
+
+function showPage(page) {
+  pages.forEach(p => {
+    document.getElementById(`page-${p}`)?.classList.remove('active');
+  });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  document.getElementById('page-title').textContent = titles[page] || page;
+
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    if (item.getAttribute('onclick')?.includes(page)) {
+      item.classList.add('active');
+    }
+  });
+}
+
+// ─── CHART ───
+const ctx = document.getElementById('revenueChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+    datasets: [{
+      label: 'Revenue ($)',
+      data: [8200, 11400, 14800, 17200, 20600, 24381],
+      backgroundColor: 'rgba(255,107,53,0.15)',
+      borderColor: '#FF6B35',
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#8890A8', font: { size: 11 } } },
+      y: { grid: { color: '#F0F2F8' }, ticks: { color: '#8890A8', font: { size: 11 }, callback: v => '$' + v.toLocaleString() } }
+    }
+  }
+});
+
+// ─── LOGOUT ───
+async function handleLogout() {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
+}
+</script>
+
+</body>
+</html>
