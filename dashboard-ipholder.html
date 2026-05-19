@@ -1033,28 +1033,21 @@ async function saveProfile() {
 document.getElementById('file-input').addEventListener('change', async function(e) {
   const files = e.target.files;
   if (!files.length) return;
-
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
-
   const btn = document.querySelector('.btn-upload');
   btn.textContent = 'Uploading...';
   btn.disabled = true;
-
   let successCount = 0;
-
   for (const file of files) {
     const fileExt = file.name.split('.').pop();
     const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substr(2,9)}.${fileExt}`;
-
-    const { data: storageData, error: storageError } = await sb.storage
+    const { error: storageError } = await sb.storage
       .from('ip-holder-assets')
       .upload(fileName, file, { cacheControl: '3600', upsert: false });
-
     if (!storageError) {
       const { data: urlData } = sb.storage.from('ip-holder-assets').getPublicUrl(fileName);
-      
-      await sb.from('assets').insert({
+      const { error: insertError } = await sb.from('assets').insert({
         uploader_id: user.id,
         file_url: urlData.publicUrl,
         storage_path: fileName,
@@ -1062,14 +1055,12 @@ document.getElementById('file-input').addEventListener('change', async function(
         asset_type: 'licensed',
         status: 'pending'
       });
-
-      successCount++;
+      console.log('Insert error:', insertError);
+      if (!insertError) successCount++;
     }
   }
-
   btn.textContent = 'Choose Files';
   btn.disabled = false;
-
   if (successCount > 0) {
     alert(`✅ ${successCount} file(s) uploaded! Pending admin approval.`);
   } else {
