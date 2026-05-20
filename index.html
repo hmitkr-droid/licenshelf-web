@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Licenshelf — IP Licensing for Everyone</title>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0A0F1E">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,21 +73,35 @@ header.light-header {
 }
 
 .logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-decoration: none;
+  color: var(--hero-white);
   display: flex;
   align-items: center;
+  gap: 10px;
+  transition: color 0.3s;
 }
 
-.logo img {
-  height: 36px;
-  width: auto;
-  display: block;
+header.light-header .logo { color: var(--text); }
+
+.logo-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
 }
 
-/* Light header versiyonu için logo rengi tersine çevrilecek */
-header.light-header .logo img {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1200%) hue-rotate(345deg) brightness(100%);
-}
+.logo span { color: var(--orange); }
 
 nav {
   display: flex;
@@ -204,10 +225,10 @@ header.light-header .hamburger span { background: var(--text); }
 
 .hero h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(2.4rem, 6vw, 4.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
   color: var(--hero-white);
   margin-bottom: 1.5rem;
   animation: fadeUp 0.8s 0.1s ease both;
@@ -376,16 +397,16 @@ h2 {
 
 .problem-card {
   background: var(--bg);
-  border: 1.5px solid rgba(255,107,53,0.25);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
   padding: 1.8rem;
   transition: border-color 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
 .problem-card:hover {
-  border-color: rgba(255,107,53,0.5);
+  border-color: rgba(255,107,53,0.25);
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(255,107,53,0.08);
+  box-shadow: 0 12px 32px rgba(255,107,53,0.06);
 }
 
 .problem-icon {
@@ -426,7 +447,7 @@ h2 {
 .step {
   padding: 2rem;
   background: var(--bg);
-  border: 1.5px solid rgba(255,107,53,0.2);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
   transition: border-color 0.3s, transform 0.2s, box-shadow 0.2s;
   position: relative;
@@ -721,7 +742,8 @@ footer {
 <!-- HEADER -->
 <header id="header">
   <a href="#" class="logo">
-    <img src="logo.png" alt="LicenShelf" />
+    <div class="logo-icon">L</div>
+    License<span>shelf</span>
   </a>
 
   <nav id="nav">
@@ -922,9 +944,7 @@ footer {
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <a href="#" class="footer-logo">
-      <img src="logo.png" alt="LicenShelf" style="height:28px; width:auto;" />
-    </a>
+    <a href="#" class="footer-logo">License<span>shelf</span></a>
     <div class="footer-links">
       <a href="#why">Why Licenshelf</a>
       <a href="#how">How It Works</a>
