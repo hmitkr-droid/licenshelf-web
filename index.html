@@ -23,6 +23,9 @@
   --orange-light: rgba(255,107,53,0.08);
   --teal: #00D4AA;
   --teal-dim: rgba(0,212,170,0.1);
+  --violet: #8B5CF6;
+  --violet-dim: rgba(139,92,246,0.1);
+  --violet-light: rgba(139,92,246,0.07);
 
   /* Light theme */
   --bg: #FFFFFF;
@@ -484,7 +487,7 @@ h2 {
 /* ─── FOR WHOM ─── */
 .whom-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
@@ -503,6 +506,7 @@ h2 {
 
 .whom-card.orange:hover { border-color: rgba(255,107,53,0.3); }
 .whom-card.teal:hover { border-color: rgba(0,212,170,0.3); }
+.whom-card.violet:hover { border-color: rgba(139,92,246,0.3); }
 .whom-card.blue:hover { border-color: rgba(99,179,237,0.3); }
 
 .whom-avatar {
@@ -518,6 +522,7 @@ h2 {
 
 .whom-avatar.orange { background: var(--orange-light); }
 .whom-avatar.teal { background: var(--teal-dim); }
+.whom-avatar.violet { background: var(--violet-dim); }
 .whom-avatar.blue { background: rgba(99,179,237,0.08); }
 
 .whom-role {
@@ -530,6 +535,7 @@ h2 {
 
 .whom-card.orange .whom-role { color: var(--orange); }
 .whom-card.teal .whom-role { color: var(--teal); }
+.whom-card.violet .whom-role { color: var(--violet); }
 .whom-card.blue .whom-role { color: #3B82F6; }
 
 .whom-card h3 {
@@ -577,6 +583,7 @@ h2 {
 
 .check.orange { background: var(--orange-light); color: var(--orange); }
 .check.teal { background: var(--teal-dim); color: var(--teal); }
+.check.violet { background: var(--violet-dim); color: var(--violet); }
 .check.blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
 
 /* ─── CTA SECTION ─── */
@@ -865,7 +872,7 @@ footer {
   <section>
     <div class="section-tag">Who It's For</div>
     <h2>Built for every side<br>of the equation.</h2>
-    <p class="section-desc">Licenshelf creates value for every player in the IP ecosystem — not just the big ones.</p>
+    <p class="section-desc">From global studios to independent artists, Licenshelf creates value for every player in the IP ecosystem — not just the big ones.</p>
 
     <div class="whom-grid">
       <div class="whom-card orange reveal">
@@ -878,6 +885,19 @@ footer {
           <li><span class="check orange">✓</span>Real-time sales dashboard</li>
           <li><span class="check orange">✓</span>Brand quality control</li>
           <li><span class="check orange">✓</span>New revenue from untapped market</li>
+        </ul>
+      </div>
+
+      <div class="whom-card violet reveal">
+        <div class="whom-avatar violet">🎨</div>
+        <div class="whom-role">Designers & Artists</div>
+        <h3>Independent Creators</h3>
+        <p>Get your artwork in front of millions of POD sellers. We bring freelance designs into the licensing library — so your work earns on every sale.</p>
+        <ul class="whom-benefits">
+          <li><span class="check violet">✓</span>Reach a massive seller base</li>
+          <li><span class="check violet">✓</span>Royalties on every sale</li>
+          <li><span class="check violet">✓</span>No marketplace to manage</li>
+          <li><span class="check violet">✓</span>Keep full creative ownership</li>
         </ul>
       </div>
 
