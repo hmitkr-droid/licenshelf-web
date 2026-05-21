@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licenshelf — Contact</title>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0A0F1E">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0A0F1E;
+  --navy-2: #111827;
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --orange-light: rgba(255,107,53,0.08);
+  --teal: #00D4AA;
+  --teal-dim: rgba(0,212,170,0.1);
+  --bg: #FFFFFF;
+  --bg-2: #F7F8FC;
+  --bg-3: #EEF0F8;
+  --text: #0D1224;
+  --text-2: #4A5068;
+  --text-3: #8890A8;
+  --border-light: #E4E7F0;
+  --border-lighter: #F0F2F8;
+  --hero-white: #F0F4FF;
+  --hero-muted: rgba(240,244,255,0.55);
+  --hero-border: rgba(240,244,255,0.1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 2.5rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10,15,30,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(240,244,255,0.08);
+  transition: background 0.3s;
+}
+header.light-header {
+  background: rgba(255,255,255,0.96);
+  border-bottom: 1px solid var(--border-light);
+}
+.logo { text-decoration: none; display: flex; align-items: center; }
+.logo img { height: 36px; width: auto; display: block; }
+header.light-header .logo img {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1200%) hue-rotate(345deg) brightness(100%);
+}
+nav { display: flex; align-items: center; gap: 2rem; }
+nav a {
+  color: var(--hero-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--hero-white); }
+header.light-header nav a { color: var(--text-2); }
+header.light-header nav a:hover { color: var(--text); }
+.nav-login {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,107,53,0.3);
+  color: var(--orange) !important;
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-weight: 500 !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.nav-login:hover { background: rgba(255,107,53,0.2) !important; transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--hero-white); border-radius: 2px; transition: all 0.3s;
+}
+header.light-header .hamburger span { background: var(--text); }
+
+/* ─── PAGE HERO (DARK) ─── */
+.page-hero {
+  min-height: 52vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10rem 2rem 5rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--navy);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,170,0.07) 0%, transparent 50%);
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(240,244,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,244,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.hero-content { position: relative; z-index: 1; max-width: 760px; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,170,0.1);
+  border: 1px solid rgba(0,212,170,0.2);
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 100px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal); animation: blink 2s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.page-hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.1rem, 5.5vw, 3.7rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--hero-white);
+  margin-bottom: 1.3rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.page-hero h1 em { font-style: normal; color: var(--orange); }
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 300;
+  color: var(--hero-muted);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.8;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.hero-sub strong { color: var(--hero-white); font-weight: 500; }
+
+/* ─── SECTIONS ─── */
+.section-wrap { background: var(--bg); }
+.section-wrap.alt { background: var(--bg-2); }
+section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 1rem;
+}
+.section-tag::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 2px;
+  background: var(--orange); border-radius: 2px;
+}
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-2);
+  max-width: 520px;
+  line-height: 1.8;
+  margin-bottom: 3.5rem;
+}
+
+/* ─── CONTACT OPTIONS ─── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem;
+}
+.contact-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border-light);
+  border-radius: 16px;
+  padding: 2.2rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s;
+}
+.contact-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.07); }
+.contact-card.orange:hover { border-color: rgba(255,107,53,0.3); }
+.contact-card.teal:hover { border-color: rgba(0,212,170,0.3); }
+.contact-card.blue:hover { border-color: rgba(99,179,237,0.3); }
+.contact-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 1.4rem;
+}
+.contact-icon.orange { background: var(--orange-light); }
+.contact-icon.teal { background: var(--teal-dim); }
+.contact-icon.blue { background: rgba(99,179,237,0.08); }
+.contact-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--text); margin-bottom: 0.6rem; letter-spacing: -0.01em;
+}
+.contact-card p {
+  font-size: 14px; color: var(--text-2);
+  line-height: 1.7; margin-bottom: 1.3rem;
+}
+.contact-link {
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s;
+}
+.contact-card.orange .contact-link { color: var(--orange); }
+.contact-card.teal .contact-link { color: var(--teal); }
+.contact-card.blue .contact-link { color: #3B82F6; }
+.contact-link:hover { gap: 10px; }
+
+/* ─── CONTACT FORM ─── */
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.form-intro h2 { margin-bottom: 1rem; }
+.form-intro p {
+  font-size: 1.02rem;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+.form-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--bg);
+  border: 1.5px solid var(--border-light);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.form-email:hover { border-color: rgba(255,107,53,0.4); transform: translateY(-1px); }
+.form-email span { color: var(--orange); }
+
+.form-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border-light);
+  border-radius: 18px;
+  padding: 2.4rem;
+}
+.form-row { margin-bottom: 1.2rem; }
+.form-row label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.45rem;
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg-2);
+  transition: border-color 0.2s, background 0.2s;
+}
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: var(--orange);
+  background: var(--bg);
+}
+.form-row textarea { resize: vertical; min-height: 120px; }
+.form-btn {
+  width: 100%;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.form-btn:hover { background: #e85a20; transform: translateY(-2px); }
+.form-note {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 0.9rem;
+  text-align: center;
+}
+.form-msg {
+  font-size: 13px;
+  margin-top: 0.9rem;
+  display: none;
+}
+.form-msg.show { display: block; color: #dc2626; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border-light);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.footer-logo { display: flex; align-items: center; text-decoration: none; }
+.footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+.footer-links a {
+  color: var(--text-3);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text); }
+.footer-copy { font-size: 12px; color: var(--text-3); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 860px) {
+  .form-layout { grid-template-columns: 1fr; gap: 2.2rem; }
+}
+@media (max-width: 768px) {
+  nav { display: none; }
+  .hamburger { display: flex; }
+  nav.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: var(--navy-2);
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid rgba(240,244,255,0.08);
+    z-index: 99;
+  }
+  header.light-header nav.open {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="LicenShelf" />
+  </a>
+  <nav id="nav">
+    <a href="about.html">About Us</a>
+    <a href="why.html">Why Licenshelf</a>
+    <a href="how-it-works.html">How It Works</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html" class="nav-login">LS Login →</a>
+  </nav>
+  <div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Get in Touch
+    </div>
+    <h1>Let's <em>talk.</em></h1>
+    <p class="hero-sub">
+      Whether you hold IP rights or sell print-on-demand products,
+      we'd love to hear from you.
+    </p>
+  </div>
+</div>
+
+<!-- CONTACT OPTIONS -->
+<div class="section-wrap">
+  <section>
+    <div class="section-tag">Reach Out</div>
+    <h2>Pick the path<br>that fits you.</h2>
+    <p class="section-desc">Tell us a little about who you are, and we'll point you to the right place.</p>
+    <div class="contact-grid">
+      <div class="contact-card orange reveal">
+        <div class="contact-icon orange">🎮</div>
+        <h3>For IP Holders</h3>
+        <p>Gaming studios, anime producers, and independent artists looking to license their catalog and earn royalties.</p>
+        <a class="contact-link" href="mailto:hello@licenshelf.com?subject=IP%20Holder%20Inquiry">
+          hello@licenshelf.com
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="contact-card teal reveal">
+        <div class="contact-icon teal">🖨️</div>
+        <h3>For POD Sellers</h3>
+        <p>Independent merchants who want legal access to premium IP directly inside the POD tools they already use.</p>
+        <a class="contact-link" href="mailto:hello@licenshelf.com?subject=POD%20Seller%20Inquiry">
+          hello@licenshelf.com
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="contact-card blue reveal">
+        <div class="contact-icon blue">💬</div>
+        <h3>General &amp; Press</h3>
+        <p>Partnerships, press, investors, or anything else — reach the team directly and we'll get back to you.</p>
+        <a class="contact-link" href="mailto:hello@licenshelf.com?subject=General%20Inquiry">
+          hello@licenshelf.com
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CONTACT FORM -->
+<div class="section-wrap alt">
+  <section>
+    <div class="form-layout">
+      <div class="form-intro">
+        <div class="section-tag">Send a Message</div>
+        <h2>Drop us a line.</h2>
+        <p>Fill in the form and we'll get back to you as soon as we can. Prefer email? Reach us directly anytime.</p>
+        <a class="form-email" href="mailto:hello@licenshelf.com">
+          <span>✉</span> hello@licenshelf.com
+        </a>
+      </div>
+
+      <div class="form-card">
+        <div class="form-row">
+          <label for="cf-name">Your name</label>
+          <input type="text" id="cf-name" placeholder="Jane Doe" autocomplete="name">
+        </div>
+        <div class="form-row">
+          <label for="cf-email">Email address</label>
+          <input type="email" id="cf-email" placeholder="jane@example.com" autocomplete="email">
+        </div>
+        <div class="form-row">
+          <label for="cf-role">I am a...</label>
+          <select id="cf-role">
+            <option value="IP Holder">IP Holder</option>
+            <option value="POD Seller">POD Seller</option>
+            <option value="Investor">Investor</option>
+            <option value="Press / Media">Press / Media</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" placeholder="Tell us how we can help..."></textarea>
+        </div>
+        <button type="button" class="form-btn" onclick="sendContact()">Send Message</button>
+        <div class="form-note">This opens your email app with the message ready to send.</div>
+        <div class="form-msg" id="cf-msg"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="LicenShelf" style="height:28px; width:auto;" />
+    </a>
+    <div class="footer-links">
+      <a href="about.html">About Us</a>
+      <a href="why.html">Why Licenshelf</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">LS Login</a>
+    </div>
+    <div class="footer-copy">© 2026 Licenshelf. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  document.getElementById('nav').classList.toggle('open');
+}
+const header = document.getElementById('header');
+const heroEl = document.querySelector('.page-hero');
+window.addEventListener('scroll', () => {
+  const heroBottom = heroEl.getBoundingClientRect().bottom;
+  if (heroBottom <= 68) { header.classList.add('light-header'); }
+  else { header.classList.remove('light-header'); }
+});
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+
+function sendContact() {
+  const name = document.getElementById('cf-name').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const role = document.getElementById('cf-role').value;
+  const message = document.getElementById('cf-message').value.trim();
+  const msgEl = document.getElementById('cf-msg');
+
+  if (!name || !email || !message) {
+    msgEl.textContent = 'Please fill in your name, email, and message.';
+    msgEl.className = 'form-msg show';
+    return;
+  }
+  msgEl.className = 'form-msg';
+  const subject = encodeURIComponent('Licenshelf inquiry — ' + role);
+  const body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'I am a: ' + role + '\n\n' +
+    message
+  );
+  window.location.href = 'mailto:hello@licenshelf.com?subject=' + subject + '&body=' + body;
+}
+</script>
+
+</body>
+</html>
