@@ -80,8 +80,10 @@ nav a {
   transition: color 0.2s;
 }
 nav a:hover { color: var(--hero-white); }
+nav a.active { color: var(--orange); }
 header.light-header nav a { color: var(--text-2); }
 header.light-header nav a:hover { color: var(--text); }
+header.light-header nav a.active { color: var(--orange); }
 .nav-login {
   background: var(--orange-dim);
   border: 1px solid rgba(255,107,53,0.3);
@@ -431,7 +433,8 @@ footer {
     <a href="about.html">About Us</a>
     <a href="why.html">Why Licenshelf</a>
     <a href="how-it-works.html">How It Works</a>
-    <a href="contact.html">Contact</a>
+    <a href="licenses.html">Licenses</a>
+    <a href="contact.html" class="active">Contact</a>
     <a href="login.html" class="nav-login">LS Login →</a>
   </nav>
   <div class="hamburger" id="hamburger" onclick="toggleNav()">
@@ -548,6 +551,7 @@ footer {
       <a href="about.html">About Us</a>
       <a href="why.html">Why Licenshelf</a>
       <a href="how-it-works.html">How It Works</a>
+      <a href="licenses.html">Licenses</a>
       <a href="contact.html">Contact</a>
       <a href="login.html">LS Login</a>
     </div>
