@@ -87,7 +87,6 @@ header.light-header {
   display: block;
 }
 
-/* Light header versiyonu için logo rengi tersine çevrilecek */
 header.light-header .logo img {
   filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1200%) hue-rotate(345deg) brightness(100%);
 }
@@ -424,6 +423,127 @@ h2 {
   font-size: 14px;
   color: var(--text-2);
   line-height: 1.7;
+}
+
+/* ─── LOST MARKET (problem altı) ─── */
+.lost-market {
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 2.5rem;
+  align-items: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border-light);
+  border-radius: 18px;
+  padding: 2.5rem;
+}
+
+.lost-market-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.lost-stat {
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+}
+
+.lost-stat.dark { background: var(--navy); }
+.lost-stat.accent { background: var(--orange); }
+
+.lost-stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.lost-stat-label {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.78);
+}
+
+.lost-stat-note {
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  margin-top: 0.4rem;
+}
+
+.lost-market-right { display: flex; flex-direction: column; }
+
+.lost-chart-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.lost-chart-sub {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: 1.8rem;
+}
+
+.lost-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.9rem;
+  height: 220px;
+  padding-top: 1.5rem;
+}
+
+.lost-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.lost-bar-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.lost-bar {
+  width: 100%;
+  max-width: 46px;
+  border-radius: 7px 7px 0 0;
+  background: rgba(255,107,53,0.35);
+  height: 0;
+  transition: height 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lost-bar.peak { background: var(--orange); }
+
+.lost-chart.animate .lost-bar { height: var(--bar-h); }
+
+.lost-bar-year {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  margin-top: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  .lost-market {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.8rem;
+  }
+  .lost-chart { height: 180px; }
 }
 
 /* ─── HOW IT WORKS ─── */
@@ -767,7 +887,7 @@ footer {
     </h1>
 
     <p class="hero-sub">
-      Licenshelf connects <strong>IP holders</strong> with independent creators through an
+      Licenshelf connects <strong>IP holders</strong> and independent creators through an
       <strong>automated licensing platform</strong> — legal, simple, and built for everyone.
     </p>
 
@@ -832,6 +952,54 @@ footer {
         <p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p>
       </div>
     </div>
+
+    <!-- LOST MARKET -->
+    <div class="lost-market reveal">
+      <div class="lost-market-left">
+        <div class="lost-stat dark">
+          <div class="lost-stat-num">~$60B</div>
+          <div class="lost-stat-label">Global unlicensed "lost market" for character &amp; IP products</div>
+          <div class="lost-stat-note">Nearly the size of the entire registered entertainment licensing market</div>
+        </div>
+        <div class="lost-stat accent">
+          <div class="lost-stat-num">$30B</div>
+          <div class="lost-stat-label">Lost in Japan alone, from counterfeit character goods</div>
+          <div class="lost-stat-note">METI, 2026 — measured for the first time</div>
+        </div>
+      </div>
+
+      <div class="lost-market-right">
+        <div class="lost-chart-title">The lost market keeps growing</div>
+        <div class="lost-chart-sub">Estimated global unlicensed market size (USD billions)</div>
+        <div class="lost-chart" id="lostChart">
+          <div class="lost-bar-col">
+            <div class="lost-bar-val">$32B</div>
+            <div class="lost-bar" style="--bar-h:53%"></div>
+            <div class="lost-bar-year">2022</div>
+          </div>
+          <div class="lost-bar-col">
+            <div class="lost-bar-val">$40B</div>
+            <div class="lost-bar" style="--bar-h:67%"></div>
+            <div class="lost-bar-year">2023</div>
+          </div>
+          <div class="lost-bar-col">
+            <div class="lost-bar-val">$47B</div>
+            <div class="lost-bar" style="--bar-h:78%"></div>
+            <div class="lost-bar-year">2024</div>
+          </div>
+          <div class="lost-bar-col">
+            <div class="lost-bar-val">$54B</div>
+            <div class="lost-bar" style="--bar-h:90%"></div>
+            <div class="lost-bar-year">2025</div>
+          </div>
+          <div class="lost-bar-col">
+            <div class="lost-bar-val">$60B</div>
+            <div class="lost-bar peak" style="--bar-h:100%"></div>
+            <div class="lost-bar-year">2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -878,7 +1046,7 @@ footer {
       <div class="whom-card orange reveal">
         <div class="whom-avatar orange">🎮</div>
         <div class="whom-role">IP Holders</div>
-        <h3>Gaming Studios & Creators</h3>
+        <h3>Gaming Studios &amp; Creators</h3>
         <p>Turn unlicensed demand into real revenue. Reach millions of independent sellers without any operational overhead.</p>
         <ul class="whom-benefits">
           <li><span class="check orange">✓</span>Automated royalty collection</li>
@@ -890,7 +1058,7 @@ footer {
 
       <div class="whom-card violet reveal">
         <div class="whom-avatar violet">🎨</div>
-        <div class="whom-role">Designers & Artists</div>
+        <div class="whom-role">Designers &amp; Artists</div>
         <h3>Independent Creators</h3>
         <p>Get your artwork in front of millions of POD sellers. We bring freelance designs into the licensing library — so your work earns on every sale.</p>
         <ul class="whom-benefits">
@@ -917,7 +1085,7 @@ footer {
       <div class="whom-card blue reveal">
         <div class="whom-avatar blue">🛒</div>
         <div class="whom-role">End Consumers</div>
-        <h3>Fans & Buyers</h3>
+        <h3>Fans &amp; Buyers</h3>
         <p>Find the licensed products you've been searching for — from your favorite games, shows, and creators.</p>
         <ul class="whom-benefits">
           <li><span class="check blue">✓</span>Officially licensed products</li>
@@ -991,6 +1159,20 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 reveals.forEach(el => observer.observe(el));
+
+// Lost-market bar chart animation
+const lostChart = document.getElementById('lostChart');
+if (lostChart) {
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+        chartObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  chartObserver.observe(lostChart);
+}
 </script>
 
 </body>
