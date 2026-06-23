@@ -173,29 +173,17 @@ h2 {
   box-shadow: 0 16px 40px rgba(255,107,53,0.1);
   border-color: rgba(255,107,53,0.35);
 }
-/* shimmer görsel alanı */
+/* illüstrasyon görsel alanı (shimmer kaldırıldı) */
 .cat-thumb {
   position: relative;
   height: 150px;
-  background: linear-gradient(110deg,
-    rgba(255,107,53,0.10) 0%,
-    rgba(255,107,53,0.05) 30%,
-    rgba(255,107,53,0.22) 50%,
-    rgba(255,107,53,0.05) 70%,
-    rgba(255,107,53,0.10) 100%);
-  background-size: 220% 100%;
-  animation: shimmer 2.4s ease-in-out infinite;
-  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  display: block;
 }
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-.cat-emoji {
-  font-size: 2.4rem;
-  filter: grayscale(0.1);
-  opacity: 0.92;
-  position: relative; z-index: 1;
+.cat-illus {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .cat-lock {
   position: absolute; top: 12px; right: 12px;
@@ -216,7 +204,6 @@ h2 {
 }
 .cat-status-dot {
   width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
-  animation: blink 1.8s ease infinite;
 }
 
 /* ─── HOW TO GET A LICENSE (two sides) ─── */
@@ -380,36 +367,115 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     <div class="cat-grid" id="catGrid">
       <!-- cards injected/static -->
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">🎮</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Gaming</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<rect x="45" y="55" width="110" height="55" rx="27" fill="#FF6B35"/>
+<circle cx="75" cy="82" r="13" fill="#0A0F1E"/>
+<rect x="71" y="76" width="8" height="12" rx="2" fill="#FFFFFF"/>
+<rect x="69" y="78" width="12" height="8" rx="2" fill="#FFFFFF"/>
+<circle cx="123" cy="76" r="6" fill="#FFFFFF"/>
+<circle cx="135" cy="88" r="6" fill="#FFFFFF"/>
+<circle cx="100" cy="50" r="7" fill="#FFB498"/>
+<circle cx="120" cy="42" r="5" fill="#FFE2D6"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Gaming</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">🌸</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Anime &amp; Manga</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<path d="M100 38 L112 68 L145 70 L118 90 L128 122 L100 103 L72 122 L82 90 L55 70 L88 68 Z" fill="#FF6B35"/>
+<circle cx="100" cy="80" r="13" fill="#FFFFFF"/>
+<circle cx="100" cy="80" r="7" fill="#0A0F1E"/>
+<circle cx="103" cy="77" r="2.5" fill="#FFFFFF"/>
+<circle cx="150" cy="50" r="5" fill="#FFB498"/>
+<circle cx="52" cy="55" r="4" fill="#FFE2D6"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Anime &amp; Manga</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">🎬</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Film &amp; TV</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<rect x="48" y="62" width="104" height="52" rx="6" fill="#0A0F1E"/>
+<rect x="48" y="46" width="104" height="20" rx="4" fill="#FF6B35" transform="rotate(-8 100 56)"/>
+<rect x="60" y="44" width="9" height="20" fill="#FFFFFF" transform="rotate(-8 64 54)"/>
+<rect x="82" y="41" width="9" height="20" fill="#FFFFFF" transform="rotate(-8 86 51)"/>
+<rect x="104" y="38" width="9" height="20" fill="#FFFFFF" transform="rotate(-8 108 48)"/>
+<circle cx="100" cy="90" r="14" fill="#FF6B35"/>
+<path d="M95 83 L95 97 L107 90 Z" fill="#FFFFFF"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Film &amp; TV</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">🎵</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Music</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<rect x="88" y="42" width="11" height="60" rx="3" fill="#0A0F1E"/>
+<rect x="123" y="35" width="11" height="55" rx="3" fill="#0A0F1E"/>
+<path d="M88 42 L134 35 L134 50 L88 57 Z" fill="#FF6B35"/>
+<ellipse cx="80" cy="103" rx="17" ry="13" fill="#FF6B35"/>
+<ellipse cx="115" cy="91" rx="17" ry="13" fill="#FF6B35"/>
+<circle cx="150" cy="55" r="5" fill="#FFB498"/>
+<circle cx="55" cy="50" r="4" fill="#FFE2D6"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Music</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">🎨</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Digital Art</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<path d="M100 45 C70 45 50 67 50 90 C50 105 62 112 75 108 C82 106 84 99 88 99 C95 99 94 110 104 110 C130 110 152 92 150 68 C148 52 128 45 100 45 Z" fill="#FF6B35"/>
+<circle cx="78" cy="72" r="7" fill="#FFFFFF"/>
+<circle cx="100" cy="64" r="7" fill="#0A0F1E"/>
+<circle cx="122" cy="70" r="7" fill="#FFE2D6"/>
+<circle cx="128" cy="90" r="7" fill="#FFFFFF"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Digital Art</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">⚡</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Pop Culture</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<path d="M110 35 L70 88 L95 88 L85 118 L132 60 L105 60 Z" fill="#FF6B35"/>
+<circle cx="60" cy="55" r="6" fill="#FFB498"/>
+<circle cx="145" cy="95" r="7" fill="#FFE2D6"/>
+<circle cx="140" cy="48" r="4" fill="#3A4256"/>
+<circle cx="55" cy="100" r="4" fill="#FFB498"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Pop Culture</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">⚽</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Sports</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<circle cx="100" cy="78" r="42" fill="#FF6B35"/>
+<path d="M100 78 L100 78 Z" fill="#0A0F1E"/>
+<polygon points="100,58 118,71 111,92 89,92 82,71" fill="#0A0F1E"/>
+<path d="M100 36 L100 58 M65 65 L82 71 M135 65 L118 71 M78 112 L89 92 M122 112 L111 92" stroke="#0A0F1E" stroke-width="4" stroke-linecap="round"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Sports</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-thumb"><span class="cat-emoji">✏️</span><div class="cat-lock">🔒</div></div>
-        <div class="cat-body"><div class="cat-name">Indie Creators</div><div class="cat-status"><span class="cat-status-dot"></span>Loading licenses</div></div>
+        <div class="cat-thumb"><svg xmlns="http://www.w3.org/2000/svg" class="cat-illus" preserveAspectRatio="xMidYMid slice" viewBox="0 0 200 150" fill="none">
+<rect width="200" height="150" fill="#FFF6F1"/>
+
+<rect x="80" y="40" width="26" height="70" rx="4" fill="#FF6B35" transform="rotate(35 93 75)"/>
+<path d="M62 108 L72 96 L86 106 L76 118 Z" fill="#0A0F1E" transform="rotate(35 74 107)"/>
+<rect x="80" y="44" width="26" height="9" fill="#0A0F1E" transform="rotate(35 93 48)"/>
+<circle cx="135" cy="55" r="6" fill="#FFB498"/>
+<circle cx="125" cy="100" r="5" fill="#FFE2D6"/>
+
+</svg><div class="cat-lock">🔒</div></div>
+        <div class="cat-body"><div class="cat-name">Indie Creators</div><div class="cat-status"><span class="cat-status-dot"></span>Coming soon</div></div>
       </div>
     </div>
   </section>
