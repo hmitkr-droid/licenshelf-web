@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Licenshelf — Why Licenshelf</title>
-<!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -14,427 +13,102 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --navy: #0A0F1E;
-  --navy-2: #111827;
-  --orange: #FF6B35;
-  --orange-dim: rgba(255,107,53,0.12);
-  --orange-light: rgba(255,107,53,0.08);
-  --teal: #00D4AA;
-  --teal-dim: rgba(0,212,170,0.1);
-  --bg: #FFFFFF;
-  --bg-2: #F7F8FC;
-  --bg-3: #EEF0F8;
-  --text: #0D1224;
-  --text-2: #4A5068;
-  --text-3: #8890A8;
-  --border-light: #E4E7F0;
-  --border-lighter: #F0F2F8;
-  --hero-white: #F0F4FF;
-  --hero-muted: rgba(240,244,255,0.55);
-  --hero-border: rgba(240,244,255,0.1);
+  --navy: #0A0F1E; --navy-2: #111827; --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.12); --orange-light: rgba(255,107,53,0.08);
+  --teal: #00D4AA; --teal-dim: rgba(0,212,170,0.1);
+  --bg: #FFFFFF; --bg-2: #F7F8FC; --bg-3: #EEF0F8;
+  --text: #0D1224; --text-2: #4A5068; --text-3: #8890A8;
+  --border-light: #E4E7F0; --border-lighter: #F0F2F8;
+  --hero-white: #F0F4FF; --hero-muted: rgba(240,244,255,0.55); --hero-border: rgba(240,244,255,0.1);
 }
-
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-
-/* ─── HEADER ─── */
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 0 2.5rem;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(10,15,30,0.92);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(240,244,255,0.08);
-  transition: background 0.3s;
-}
-header.light-header {
-  background: rgba(255,255,255,0.96);
-  border-bottom: 1px solid var(--border-light);
-}
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2.5rem; height: 68px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,15,30,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(240,244,255,0.08); transition: background 0.3s; }
+header.light-header { background: rgba(255,255,255,0.96); border-bottom: 1px solid var(--border-light); }
 .logo { text-decoration: none; display: flex; align-items: center; }
 .logo img { height: 36px; width: auto; display: block; }
-header.light-header .logo img {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1200%) hue-rotate(345deg) brightness(100%);
-}
+header.light-header .logo img { filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1200%) hue-rotate(345deg) brightness(100%); }
 nav { display: flex; align-items: center; gap: 2rem; }
-nav a {
-  color: var(--hero-muted);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 400;
-  transition: color 0.2s;
-}
+nav a { color: var(--hero-muted); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.2s; }
 nav a:hover { color: var(--hero-white); }
+nav a.active { color: var(--orange); }
 header.light-header nav a { color: var(--text-2); }
 header.light-header nav a:hover { color: var(--text); }
-.nav-login {
-  background: var(--orange-dim);
-  border: 1px solid rgba(255,107,53,0.3);
-  color: var(--orange) !important;
-  padding: 8px 20px;
-  border-radius: 100px;
-  font-weight: 500 !important;
-  transition: background 0.2s, transform 0.15s !important;
-}
+header.light-header nav a.active { color: var(--orange); }
+.nav-login { background: var(--orange-dim); border: 1px solid rgba(255,107,53,0.3); color: var(--orange) !important; padding: 8px 20px; border-radius: 100px; font-weight: 500 !important; transition: background 0.2s, transform 0.15s !important; }
 .nav-login:hover { background: rgba(255,107,53,0.2) !important; transform: translateY(-1px); }
 .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-.hamburger span {
-  display: block; width: 22px; height: 2px;
-  background: var(--hero-white); border-radius: 2px; transition: all 0.3s;
-}
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--hero-white); border-radius: 2px; transition: all 0.3s; }
 header.light-header .hamburger span { background: var(--text); }
-
-/* ─── PAGE HERO (DARK) ─── */
-.page-hero {
-  min-height: 56vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 10rem 2rem 5rem;
-  position: relative;
-  overflow: hidden;
-  background: var(--navy);
-}
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,170,0.07) 0%, transparent 50%);
-}
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(240,244,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,244,255,0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
+.page-hero { min-height: 56vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10rem 2rem 5rem; position: relative; overflow: hidden; background: var(--navy); }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,0.1) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,170,0.07) 0%, transparent 50%); }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(240,244,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,244,255,0.03) 1px, transparent 1px); background-size: 50px 50px; }
 .hero-content { position: relative; z-index: 1; max-width: 760px; }
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0,212,170,0.1);
-  border: 1px solid rgba(0,212,170,0.2);
-  color: var(--teal);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 8px 18px;
-  border-radius: 100px;
-  margin-bottom: 2rem;
-  animation: fadeUp 0.8s ease both;
-}
-.hero-badge-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--teal); animation: blink 2s ease infinite;
-}
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.2); color: var(--teal); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 18px; border-radius: 100px; margin-bottom: 2rem; animation: fadeUp 0.8s ease both; }
+.hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s ease infinite; }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-.page-hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.1rem, 5.5vw, 3.7rem);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: var(--hero-white);
-  margin-bottom: 1.3rem;
-  animation: fadeUp 0.8s 0.1s ease both;
-}
+.page-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.1rem, 5.5vw, 3.7rem); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; color: var(--hero-white); margin-bottom: 1.3rem; animation: fadeUp 0.8s 0.1s ease both; }
 .page-hero h1 em { font-style: normal; color: var(--orange); }
-.hero-sub {
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  font-weight: 300;
-  color: var(--hero-muted);
-  max-width: 580px;
-  margin: 0 auto;
-  line-height: 1.8;
-  animation: fadeUp 0.8s 0.2s ease both;
-}
+.hero-sub { font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 300; color: var(--hero-muted); max-width: 580px; margin: 0 auto; line-height: 1.8; animation: fadeUp 0.8s 0.2s ease both; }
 .hero-sub strong { color: var(--hero-white); font-weight: 500; }
-
-/* ─── SECTIONS ─── */
 .section-wrap { background: var(--bg); }
 .section-wrap.alt { background: var(--bg-2); }
 section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
-.section-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 1rem;
-}
-.section-tag::before {
-  content: '';
-  display: inline-block;
-  width: 18px; height: 2px;
-  background: var(--orange); border-radius: 2px;
-}
-h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: var(--text);
-  margin-bottom: 1rem;
-}
-.section-desc {
-  font-size: 1.05rem;
-  color: var(--text-2);
-  max-width: 520px;
-  line-height: 1.8;
-  margin-bottom: 3.5rem;
-}
-
-/* ─── PROBLEM ─── */
-.problem-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.2rem;
-}
-.problem-card {
-  background: var(--bg);
-  border: 1.5px solid rgba(255,107,53,0.25);
-  border-radius: 14px;
-  padding: 1.8rem;
-  transition: border-color 0.3s, transform 0.2s, box-shadow 0.2s;
-}
-.problem-card:hover {
-  border-color: rgba(255,107,53,0.5);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(255,107,53,0.08);
-}
-.problem-icon {
-  width: 42px; height: 42px; border-radius: 10px;
-  background: var(--orange-light);
-  border: 1px solid rgba(255,107,53,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; margin-bottom: 1.2rem;
-}
-.problem-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem; font-weight: 700;
-  color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.01em;
-}
+.section-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 1rem; }
+.section-tag::before { content: ''; display: inline-block; width: 18px; height: 2px; background: var(--orange); border-radius: 2px; }
+h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); margin-bottom: 1rem; }
+.section-desc { font-size: 1.05rem; color: var(--text-2); max-width: 520px; line-height: 1.8; margin-bottom: 3.5rem; }
+.problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+.problem-card { background: var(--bg); border: 1.5px solid rgba(255,107,53,0.25); border-radius: 14px; padding: 1.8rem; transition: border-color 0.3s, transform 0.2s, box-shadow 0.2s; }
+.problem-card:hover { border-color: rgba(255,107,53,0.5); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(255,107,53,0.08); }
+.problem-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--orange-light); border: 1px solid rgba(255,107,53,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 1.2rem; }
+.problem-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.01em; }
 .problem-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
-
-/* ─── FEATURE (DIFFERENCE) ─── */
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.2rem;
-}
-.feature-card {
-  background: var(--bg);
-  border: 1.5px solid var(--border-light);
-  border-radius: 14px;
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s;
-}
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--orange), var(--teal));
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+.feature-card { background: var(--bg); border: 1.5px solid var(--border-light); border-radius: 14px; padding: 2rem; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s; }
+.feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--teal)); opacity: 0; transition: opacity 0.3s; }
 .feature-card:hover::before { opacity: 1; }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
-.feature-icon {
-  width: 46px; height: 46px; border-radius: 11px;
-  background: var(--teal-dim);
-  border: 1px solid rgba(0,212,170,0.18);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; margin-bottom: 1.2rem;
-}
-.feature-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem; font-weight: 700;
-  color: var(--text); margin-bottom: 0.5rem;
-}
+.feature-icon { width: 46px; height: 46px; border-radius: 11px; background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.18); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 1.2rem; }
+.feature-card h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
 .feature-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
-
-/* ─── COMPARISON ─── */
-.compare {
-  border: 1.5px solid var(--border-light);
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--bg);
-}
-.compare-row {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  border-bottom: 1px solid var(--border-lighter);
-}
+.compare { border: 1.5px solid var(--border-light); border-radius: 16px; overflow: hidden; background: var(--bg); }
+.compare-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr; border-bottom: 1px solid var(--border-lighter); }
 .compare-row:last-child { border-bottom: none; }
-.compare-cell {
-  padding: 1.05rem 1.2rem;
-  font-size: 13.5px;
-  color: var(--text-2);
-  line-height: 1.5;
-  display: flex;
-  align-items: center;
-}
+.compare-cell { padding: 1.05rem 1.2rem; font-size: 13.5px; color: var(--text-2); line-height: 1.5; display: flex; align-items: center; }
 .compare-cell.label { font-weight: 600; color: var(--text); }
-.compare-cell.ls {
-  background: var(--orange-light);
-  color: var(--text);
-  font-weight: 500;
-}
+.compare-cell.ls { background: var(--orange-light); color: var(--text); font-weight: 500; }
 .compare-row.head { background: var(--bg-2); }
-.compare-row.head .compare-cell {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  color: var(--text);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
+.compare-row.head .compare-cell { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; }
 .compare-row.head .compare-cell.ls { color: var(--orange); }
-
-/* ─── CTA ─── */
-.cta-wrap {
-  background: var(--navy);
-  padding: 7rem 2rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.cta-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,107,53,0.1) 0%, transparent 70%);
-}
+.cta-wrap { background: var(--navy); padding: 7rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.cta-wrap::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,107,53,0.1) 0%, transparent 70%); }
 .cta-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
 .cta-wrap .section-tag { justify-content: center; color: var(--teal); }
 .cta-wrap .section-tag::before { background: var(--teal); }
 .cta-wrap h2 { color: var(--hero-white); }
 .cta-wrap p { color: var(--hero-muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
 .cta-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-.btn-primary {
-  background: var(--orange);
-  color: #fff;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 10px;
-  font-family: 'Syne', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: transform 0.15s, background 0.2s;
-}
+.btn-primary { background: var(--orange); color: #fff; border: none; padding: 15px 30px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s, background 0.2s; }
 .btn-primary:hover { background: #e85a20; transform: translateY(-2px); }
-.tubitak {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  color: var(--hero-muted);
-  margin-top: 1.5rem;
-  letter-spacing: 0.05em;
-}
-.tubitak::before, .tubitak::after {
-  content: '';
-  display: inline-block;
-  width: 20px; height: 1px;
-  background: rgba(240,244,255,0.2);
-}
-
-/* ─── FOOTER ─── */
-footer {
-  background: var(--bg);
-  border-top: 1px solid var(--border-light);
-  padding: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-}
+.tubitak { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; color: var(--hero-muted); margin-top: 1.5rem; letter-spacing: 0.05em; }
+.tubitak::before, .tubitak::after { content: ''; display: inline-block; width: 20px; height: 1px; background: rgba(240,244,255,0.2); }
+footer { background: var(--bg); border-top: 1px solid var(--border-light); padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; width: 100%; max-width: 1100px; margin: 0 auto; }
 .footer-logo { display: flex; align-items: center; text-decoration: none; }
 .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
-.footer-links a {
-  color: var(--text-3);
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.2s;
-}
+.footer-links a { color: var(--text-3); text-decoration: none; font-size: 13px; transition: color 0.2s; }
 .footer-links a:hover { color: var(--text); }
 .footer-copy { font-size: 12px; color: var(--text-3); }
-
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
   nav { display: none; }
   .hamburger { display: flex; }
-  nav.open {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 68px; left: 0; right: 0;
-    background: var(--navy-2);
-    padding: 2rem;
-    gap: 1.5rem;
-    border-bottom: 1px solid rgba(240,244,255,0.08);
-    z-index: 99;
-  }
-  header.light-header nav.open {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border-light);
-  }
+  nav.open { display: flex; flex-direction: column; position: fixed; top: 68px; left: 0; right: 0; background: var(--navy-2); padding: 2rem; gap: 1.5rem; border-bottom: 1px solid rgba(240,244,255,0.08); z-index: 99; }
+  header.light-header nav.open { background: var(--bg); border-bottom: 1px solid var(--border-light); }
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 560px) {
@@ -444,199 +118,104 @@ footer {
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
 <header id="header">
-  <a href="index.html" class="logo">
-    <img src="logo.png" alt="LicenShelf" />
-  </a>
+  <a href="index.html" class="logo"><img src="logo.png" alt="LicenShelf" /></a>
   <nav id="nav">
     <a href="about.html">About Us</a>
-    <a href="why.html">Why Licenshelf</a>
+    <a href="why.html" class="active">Why Licenshelf</a>
     <a href="how-it-works.html">How It Works</a>
+    <a href="licenses.html">Licenses</a>
     <a href="contact.html">Contact</a>
     <a href="login.html" class="nav-login">LS Login →</a>
   </nav>
-  <div class="hamburger" id="hamburger" onclick="toggleNav()">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
 </header>
-
-<!-- PAGE HERO -->
 <div class="page-hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <div class="hero-badge-dot"></div>
-      Why Licenshelf
-    </div>
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Why Licenshelf</div>
     <h1>A broken system<br><em>nobody fixed.</em></h1>
-    <p class="hero-sub">
-      IP licensing has always served corporations. Everyone else was left out.
-      Here's exactly what's broken — and how Licenshelf fixes it.
-    </p>
+    <p class="hero-sub">IP licensing has always served corporations. Everyone else was left out. Here's exactly what's broken — and how Licenshelf fixes it.</p>
   </div>
 </div>
-
-<!-- THE PROBLEM -->
 <div class="section-wrap">
   <section>
     <div class="section-tag">The Problem</div>
     <h2>Four reasons the<br>old way fails.</h2>
     <p class="section-desc">Traditional licensing wasn't designed for independent creators — and it shows at every step.</p>
     <div class="problem-grid">
-      <div class="problem-card reveal">
-        <div class="problem-icon">🏢</div>
-        <h3>Only for the big players</h3>
-        <p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Small sellers never had a chance.</p>
-      </div>
-      <div class="problem-card reveal">
-        <div class="problem-icon">⚠️</div>
-        <h3>Sellers live in fear</h3>
-        <p>Thousands of Etsy and Amazon sellers use IP content without licenses — not by choice, but because there's no accessible alternative.</p>
-      </div>
-      <div class="problem-card reveal">
-        <div class="problem-icon">💸</div>
-        <h3>IP holders lose revenue</h3>
-        <p>Massive unlicensed markets exist for gaming, anime, and pop culture IP. Rights holders see none of that money.</p>
-      </div>
-      <div class="problem-card reveal">
-        <div class="problem-icon">🛍️</div>
-        <h3>Consumers can't get what they want</h3>
-        <p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p>
-      </div>
+      <div class="problem-card reveal"><div class="problem-icon">🏢</div><h3>Only for the big players</h3><p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Small sellers never had a chance.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon">⚠️</div><h3>Sellers live in fear</h3><p>Thousands of Etsy and Amazon sellers use IP content without licenses — not by choice, but because there's no accessible alternative.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon">💸</div><h3>IP holders lose revenue</h3><p>Massive unlicensed markets exist for gaming, anime, and pop culture IP. Rights holders see none of that money.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon">🛍️</div><h3>Consumers can't get what they want</h3><p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p></div>
     </div>
   </section>
 </div>
-
-<!-- THE DIFFERENCE -->
 <div class="section-wrap alt">
   <section>
     <div class="section-tag">The Difference</div>
     <h2>What makes<br>Licenshelf different.</h2>
     <p class="section-desc">We didn't tweak the old model — we rebuilt licensing around the people it always excluded.</p>
     <div class="feature-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon">📚</div>
-        <h3>Aggregated licenses</h3>
-        <p>We bring gaming, anime, and pop-culture IP into one curated library — so sellers don't have to chase rights holders one by one.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">⚡</div>
-        <h3>Automated royalties</h3>
-        <p>Every sale calculates and routes the license fee automatically. No invoices, no manual accounting, no disputes.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon">🔌</div>
-        <h3>Built into POD platforms</h3>
-        <p>Licensing lives inside the tools sellers already use, like Printify — not in a separate portal nobody opens.</p>
-      </div>
+      <div class="feature-card reveal"><div class="feature-icon">📚</div><h3>Aggregated licenses</h3><p>We bring gaming, anime, and pop-culture IP into one curated library — so sellers don't have to chase rights holders one by one.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon">⚡</div><h3>Automated royalties</h3><p>Every sale calculates and routes the license fee automatically. No invoices, no manual accounting, no disputes.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon">🔌</div><h3>Built into POD platforms</h3><p>Licensing lives inside the tools sellers already use, like Printify — not in a separate portal nobody opens.</p></div>
     </div>
   </section>
 </div>
-
-<!-- COMPARISON -->
 <div class="section-wrap">
   <section>
     <div class="section-tag">Side by Side</div>
     <h2>Traditional licensing<br>vs. Licenshelf.</h2>
     <p class="section-desc">The same goal — legal use of IP — approached in two completely different ways.</p>
     <div class="compare">
-      <div class="compare-row head">
-        <div class="compare-cell label">&nbsp;</div>
-        <div class="compare-cell">Traditional Licensing</div>
-        <div class="compare-cell ls">Licenshelf</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Getting started</div>
-        <div class="compare-cell">Lawyers &amp; months of negotiation</div>
-        <div class="compare-cell ls">Self-serve, in minutes</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Minimum guarantees</div>
-        <div class="compare-cell">Thousands paid up front</div>
-        <div class="compare-cell ls">None</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Royalty handling</div>
-        <div class="compare-cell">Manual invoicing &amp; reporting</div>
-        <div class="compare-cell ls">Fully automated</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Seller legal protection</div>
-        <div class="compare-cell">None</div>
-        <div class="compare-cell ls">Built in</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Who can use it</div>
-        <div class="compare-cell">Large brands only</div>
-        <div class="compare-cell ls">Every creator &amp; seller</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-cell label">Where it lives</div>
-        <div class="compare-cell">A separate legal process</div>
-        <div class="compare-cell ls">Inside Printify &amp; POD tools</div>
-      </div>
+      <div class="compare-row head"><div class="compare-cell label">&nbsp;</div><div class="compare-cell">Traditional Licensing</div><div class="compare-cell ls">Licenshelf</div></div>
+      <div class="compare-row"><div class="compare-cell label">Getting started</div><div class="compare-cell">Lawyers &amp; months of negotiation</div><div class="compare-cell ls">Self-serve, in minutes</div></div>
+      <div class="compare-row"><div class="compare-cell label">Minimum guarantees</div><div class="compare-cell">Thousands paid up front</div><div class="compare-cell ls">None</div></div>
+      <div class="compare-row"><div class="compare-cell label">Royalty handling</div><div class="compare-cell">Manual invoicing &amp; reporting</div><div class="compare-cell ls">Fully automated</div></div>
+      <div class="compare-row"><div class="compare-cell label">Seller legal protection</div><div class="compare-cell">None</div><div class="compare-cell ls">Built in</div></div>
+      <div class="compare-row"><div class="compare-cell label">Who can use it</div><div class="compare-cell">Large brands only</div><div class="compare-cell ls">Every creator &amp; seller</div></div>
+      <div class="compare-row"><div class="compare-cell label">Where it lives</div><div class="compare-cell">A separate legal process</div><div class="compare-cell ls">Inside Printify &amp; POD tools</div></div>
     </div>
   </section>
 </div>
-
-<!-- CTA -->
 <div class="cta-wrap">
   <div class="cta-inner">
     <div class="section-tag">Get Started</div>
     <h2>Ready to be part<br>of the change?</h2>
     <p>Whether you're an IP holder looking to monetize your catalog, or a seller ready to go fully legal — let's talk.</p>
-    <div class="cta-cta">
-      <a href="contact.html" class="btn-primary">
-        Contact Us
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
+    <div class="cta-cta"><a href="contact.html" class="btn-primary">Contact Us <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     <div class="tubitak">TÜBİTAK BİGG Program — Supported Venture</div>
   </div>
 </div>
-
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <a href="index.html" class="footer-logo">
-      <img src="logo.png" alt="LicenShelf" style="height:28px; width:auto;" />
-    </a>
+    <a href="index.html" class="footer-logo"><img src="logo.png" alt="LicenShelf" style="height:28px; width:auto;" /></a>
     <div class="footer-links">
       <a href="about.html">About Us</a>
       <a href="why.html">Why Licenshelf</a>
       <a href="how-it-works.html">How It Works</a>
+      <a href="licenses.html">Licenses</a>
       <a href="contact.html">Contact</a>
       <a href="login.html">LS Login</a>
     </div>
     <div class="footer-copy">© 2026 Licenshelf. All rights reserved.</div>
   </div>
 </footer>
-
 <script>
-function toggleNav() {
-  document.getElementById('nav').classList.toggle('open');
-}
+function toggleNav() { document.getElementById('nav').classList.toggle('open'); }
 const header = document.getElementById('header');
 const heroEl = document.querySelector('.page-hero');
 window.addEventListener('scroll', () => {
   const heroBottom = heroEl.getBoundingClientRect().bottom;
-  if (heroBottom <= 68) { header.classList.add('light-header'); }
-  else { header.classList.remove('light-header'); }
+  if (heroBottom <= 68) { header.classList.add('light-header'); } else { header.classList.remove('light-header'); }
 });
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 80);
-      observer.unobserve(entry.target);
-    }
-  });
+  entries.forEach((entry, i) => { if (entry.isIntersecting) { setTimeout(() => entry.target.classList.add('visible'), i * 80); observer.unobserve(entry.target); } });
 }, { threshold: 0.1 });
 reveals.forEach(el => observer.observe(el));
 </script>
-
 </body>
 </html>
