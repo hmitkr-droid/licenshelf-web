@@ -44,7 +44,7 @@ header.light-header .hamburger span { background: var(--text); }
 .page-hero { min-height: 56vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10rem 2rem 5rem; position: relative; overflow: hidden; background: var(--navy); }
 .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,0.1) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,170,0.07) 0%, transparent 50%); }
 .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(240,244,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,244,255,0.03) 1px, transparent 1px); background-size: 50px 50px; }
-.hero-content { position: relative; z-index: 1; max-width: 760px; }
+.hero-content { position: relative; z-index: 1; max-width: 720px; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.2); color: var(--teal); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 18px; border-radius: 100px; margin-bottom: 2rem; animation: fadeUp 0.8s ease both; }
 .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s ease infinite; }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
@@ -101,9 +101,66 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
 .footer-links a { color: var(--text-3); text-decoration: none; font-size: 13px; transition: color 0.2s; }
 .footer-links a:hover { color: var(--text); }
 .footer-copy { font-size: 12px; color: var(--text-3); }
+
+/* ===== Split hero (IP holders / Designers) ===== */
+.page-hero.split { padding-top: 9rem; padding-bottom: 3.5rem; min-height: auto; }
+.badge-neutral { background: rgba(240,244,255,0.07); border-color: rgba(240,244,255,0.16); color: var(--hero-white); }
+.dot-neutral { background: var(--hero-white); animation: none; opacity: 0.8; }
+.split-hero-inner { position: relative; z-index: 1; display: flex; align-items: stretch; gap: 0; max-width: 1080px; margin: 3.75rem auto 0; width: 100%; }
+.hero-half { flex: 1; padding: 2rem 2.3rem 0.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+.hero-half-ip::before { content: ''; position: absolute; inset: -2rem -1rem; background: radial-gradient(ellipse 90% 70% at 35% 10%, rgba(255,107,53,0.15) 0%, transparent 65%); z-index: -1; border-radius: 24px; }
+.hero-half-designers::before { content: ''; position: absolute; inset: -2rem -1rem; background: radial-gradient(ellipse 90% 70% at 65% 10%, rgba(0,212,170,0.13) 0%, transparent 65%); z-index: -1; border-radius: 24px; }
+.hero-divider { width: 1px; align-self: stretch; background: linear-gradient(to bottom, transparent, rgba(240,244,255,0.16), transparent); margin: 0 0.5rem; }
+.col-eyebrow { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.9rem; }
+.col-eyebrow.orange { color: var(--orange); }
+.col-eyebrow.teal { color: var(--teal); }
+.split-heading { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(1.35rem, 2.8vw, 1.9rem); line-height: 1.18; letter-spacing: -0.02em; color: var(--hero-white); margin-bottom: 1.1rem; }
+.hero-bullets { list-style: none; text-align: left; margin: 0 auto 1.6rem; max-width: 300px; display: flex; flex-direction: column; gap: 0.75rem; }
+.hero-bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--hero-muted); line-height: 1.6; }
+.hero-bullets li::before { content: '✓'; flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--navy); margin-top: 1px; }
+.bullets-orange li::before { background: var(--orange); }
+.bullets-teal li::before { background: var(--teal); }
+.hero-illustration { width: 100%; max-width: 270px; margin: 0.25rem auto 0; }
+.hero-illustration svg { width: 100%; height: auto; display: block; }
+
+/* ===== Group labels ===== */
+.group-label-wrap { text-align: center; padding: 4rem 2rem 0; background: var(--bg); }
+.group-label-wrap.on-alt { background: var(--bg-2); }
+.group-label { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.35rem); letter-spacing: 0.08em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 16px; }
+.group-label.orange { color: var(--orange); }
+.group-label.teal { color: var(--teal); }
+.group-label::before, .group-label::after { content: ''; width: 36px; height: 2px; background: currentColor; opacity: 0.45; border-radius: 2px; }
+
+/* ===== Stats / growth section ===== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.4rem; }
+.stat-card { background: var(--bg); border: 1.5px solid var(--border-light); border-radius: 14px; padding: 2rem; }
+.stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 2.5rem); color: var(--text); letter-spacing: -0.02em; }
+.stat-label { font-size: 13px; color: var(--text-2); margin: 0.5rem 0 1.3rem; line-height: 1.6; min-height: 3.2em; }
+.stat-bar-track { width: 100%; height: 7px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+.stat-bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--orange), var(--teal)); border-radius: 4px; transition: width 1.3s cubic-bezier(.16,1,.3,1); }
+.stat-card.visible .stat-bar-fill { width: var(--fill, 70%); }
+.stat-footnote { font-size: 11.5px; color: var(--text-3); margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px dashed var(--border-light); line-height: 1.5; }
+
+/* ===== Dark (Designers) section ===== */
+.section-wrap.dark { background: var(--navy); }
+.section-wrap.dark h2 { color: var(--hero-white); }
+.section-wrap.dark .section-desc { color: var(--hero-muted); }
+.section-wrap.dark .section-tag { color: var(--teal); }
+.section-wrap.dark .section-tag::before { background: var(--teal); }
+.feature-card.on-dark { background: var(--navy-2); border-color: rgba(240,244,255,0.09); }
+.feature-card.on-dark h3 { color: var(--hero-white); }
+.feature-card.on-dark p { color: var(--hero-muted); }
+.feature-card.on-dark .feature-icon { background: var(--teal-dim); border-color: rgba(0,212,170,0.22); }
+.feature-card.on-dark:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 900px) {
+  .split-hero-inner { flex-direction: column; gap: 2.75rem; }
+  .hero-divider { width: 60%; height: 1px; margin: 0 auto; align-self: center; }
+  .hero-half { padding: 0 0.5rem; }
+}
 @media (max-width: 768px) {
   nav { display: none; }
   .hamburger { display: flex; }
@@ -130,14 +187,93 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
   </nav>
   <div class="hamburger" id="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
 </header>
-<div class="page-hero">
+
+<!-- ===== SPLIT HERO: IP Holders + Designers/Artists ===== -->
+<div class="page-hero split" id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-badge"><div class="hero-badge-dot"></div>Why Licenshelf</div>
-    <h1>A broken system<br><em>nobody fixed.</em></h1>
-    <p class="hero-sub">IP licensing has always served corporations. Everyone else was left out. Here's exactly what's broken — and how Licenshelf fixes it.</p>
+    <div class="hero-badge badge-neutral"><div class="hero-badge-dot dot-neutral"></div>Why Licenshelf</div>
+    <h1>One broken system.<br><em>Two sides left out.</em></h1>
+    <p class="hero-sub">IP licensing was built for big corporations. Everyone else — small and mid-sized e-commerce sellers, rights holders sitting on untapped catalogs, and the designers who create for them — was left to figure it out alone.</p>
   </div>
+
+  <div class="split-hero-inner">
+    <!-- IP Holders half -->
+    <div class="hero-half hero-half-ip reveal">
+      <div class="col-eyebrow orange">For IP Holders</div>
+      <h2 class="split-heading">Turn unlicensed<br>demand into revenue.</h2>
+      <ul class="hero-bullets bullets-orange">
+        <li>Reach thousands of print-on-demand sellers instantly</li>
+        <li>Automated royalty tracking — zero manual accounting</li>
+        <li>Recover revenue an unlicensed market already takes from you</li>
+      </ul>
+      <div class="hero-illustration">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 190 Q 120 220 190 205" fill="none" stroke="rgba(240,244,255,0.28)" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+          <path d="M40 190 Q 120 205 190 150 T 335 62" fill="none" stroke="#FF6B35" stroke-width="4" stroke-linecap="round"/>
+          <polygon points="335,60 320,71 344,80" fill="#FF6B35"/>
+          <rect x="30" y="230" width="340" height="14" rx="7" fill="rgba(240,244,255,0.18)"/>
+          <circle cx="100" cy="196" r="32" fill="#FF6B35"/>
+          <g transform="translate(100,196) scale(1.15)"><polygon points="0,-14 3.5,-4.9 13.3,-4.3 5.7,1.9 8.2,11.3 0,6 -8.2,11.3 -5.7,1.9 -13.3,-4.3 -3.5,-4.9" fill="#FFFFFF"/></g>
+          <circle cx="175" cy="196" r="32" fill="#00D4AA"/>
+          <g transform="translate(175,196) scale(1.15)"><polygon points="-7,-9 -7,9 10,0" fill="#FFFFFF"/></g>
+          <circle cx="250" cy="196" r="32" fill="#FF6B35"/>
+          <g transform="translate(250,196) scale(1.15)">
+            <ellipse cx="-6" cy="8" rx="5" ry="3.5" transform="rotate(-15 -6 8)" fill="#FFFFFF"/>
+            <line x1="-1" y1="8" x2="-1" y2="-12" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M-1,-12 Q7,-10 4,-1" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+          <circle cx="325" cy="196" r="32" fill="#00D4AA"/>
+          <g transform="translate(325,196) scale(1.15)">
+            <ellipse cx="0" cy="0" rx="12" ry="9" fill="none" stroke="#FFFFFF" stroke-width="2.4"/>
+            <circle cx="-5" cy="-3" r="1.8" fill="#FFFFFF"/>
+            <circle cx="5" cy="-3" r="1.8" fill="#FFFFFF"/>
+            <circle cx="0" cy="4" r="1.8" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-divider"></div>
+
+    <!-- Designers/Artists half -->
+    <div class="hero-half hero-half-designers reveal">
+      <div class="col-eyebrow teal">For Designers &amp; Artists</div>
+      <h2 class="split-heading">Your art. Your rights.<br>Their reach.</h2>
+      <ul class="hero-bullets bullets-teal">
+        <li>Sellers bring the audience — you don't chase traffic</li>
+        <li>Always a license, never a transfer — you keep your rights</li>
+        <li>Weekly, itemized payouts — designers shouldn't wait a month</li>
+      </ul>
+      <div class="hero-illustration">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <path d="M128,122 Q210,75 268,82" fill="none" stroke="rgba(240,244,255,0.32)" stroke-width="2.5"/>
+          <path d="M130,150 L268,150" fill="none" stroke="rgba(240,244,255,0.32)" stroke-width="2.5"/>
+          <path d="M128,178 Q210,225 268,218" fill="none" stroke="rgba(240,244,255,0.32)" stroke-width="2.5"/>
+          <path d="M268,150 Q205,188 158,172" fill="none" stroke="#FF6B35" stroke-width="2.5" stroke-dasharray="5 6"/>
+          <polygon points="152,169 162,167 160,178" fill="#FF6B35"/>
+          <circle cx="205" cy="182" r="15" fill="#FF6B35"/>
+          <circle cx="205" cy="182" r="7.5" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+          <circle cx="290" cy="82" r="24" fill="#0A0F1E" stroke="#00D4AA" stroke-width="2.5"/>
+          <g transform="translate(290,82)"><polygon points="-9,-3 0,-11 9,-3" fill="#FFFFFF"/><rect x="-7" y="-3" width="14" height="9" rx="1.2" fill="#FFFFFF"/><rect x="-2" y="1" width="4" height="5" fill="#0A0F1E"/></g>
+          <circle cx="290" cy="150" r="24" fill="#0A0F1E" stroke="#00D4AA" stroke-width="2.5"/>
+          <g transform="translate(290,150)"><polygon points="-9,-3 0,-11 9,-3" fill="#FFFFFF"/><rect x="-7" y="-3" width="14" height="9" rx="1.2" fill="#FFFFFF"/><rect x="-2" y="1" width="4" height="5" fill="#0A0F1E"/></g>
+          <circle cx="290" cy="218" r="24" fill="#0A0F1E" stroke="#00D4AA" stroke-width="2.5"/>
+          <g transform="translate(290,218)"><polygon points="-9,-3 0,-11 9,-3" fill="#FFFFFF"/><rect x="-7" y="-3" width="14" height="9" rx="1.2" fill="#FFFFFF"/><rect x="-2" y="1" width="4" height="5" fill="#0A0F1E"/></g>
+          <circle cx="52" cy="208" r="21" fill="#0A0F1E" stroke="#00D4AA" stroke-width="2.5"/>
+          <g transform="translate(52,208)"><path d="M0,-10 L9,-6 L9,3 Q9,10 0,13 Q-9,10 -9,3 L-9,-6 Z" fill="#FFFFFF"/><path d="M-4,1 L-1,5 L5,-3" fill="none" stroke="#00D4AA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <circle cx="90" cy="150" r="42" fill="#00D4AA"/>
+          <g transform="translate(90,150) scale(1.25)"><line x1="-11" y1="11" x2="9" y2="-15" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/><polygon points="9,-15 16,-21 21,-11 12,-6" fill="#FFFFFF"/><circle cx="-14" cy="15" r="2.6" fill="#FFFFFF"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOR IP LICENSING group ===== -->
+<div class="group-label-wrap">
+  <div class="group-label orange">For IP Licensing</div>
 </div>
 <div class="section-wrap">
   <section>
@@ -145,7 +281,7 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     <h2>Four reasons the<br>old way fails.</h2>
     <p class="section-desc">Traditional licensing wasn't designed for independent creators — and it shows at every step.</p>
     <div class="problem-grid">
-      <div class="problem-card reveal"><div class="problem-icon">🏢</div><h3>Only for the big players</h3><p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Small sellers never had a chance.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon">🏢</div><h3>Only for the big players</h3><p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Mid-sized license holders and sellers never had a chance.</p></div>
       <div class="problem-card reveal"><div class="problem-icon">⚠️</div><h3>Sellers live in fear</h3><p>Thousands of Etsy and Amazon sellers use IP content without licenses — not by choice, but because there's no accessible alternative.</p></div>
       <div class="problem-card reveal"><div class="problem-icon">💸</div><h3>IP holders lose revenue</h3><p>Massive unlicensed markets exist for gaming, anime, and pop culture IP. Rights holders see none of that money.</p></div>
       <div class="problem-card reveal"><div class="problem-icon">🛍️</div><h3>Consumers can't get what they want</h3><p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p></div>
@@ -180,11 +316,58 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     </div>
   </section>
 </div>
+<div class="section-wrap alt">
+  <section>
+    <div class="section-tag">The Opportunity</div>
+    <h2>The gap keeps<br>growing.</h2>
+    <p class="section-desc">Unlicensed demand isn't shrinking — it's expanding alongside gaming, anime, and entertainment licensing worldwide. Every year it goes unaddressed is revenue left on the table.</p>
+    <!-- Sourced figures: Licensing International 2025/2026 Global Licensing Industry Study, Newzoo 2025 Global Games Market Report, METI (Japan) 2025 content piracy survey -->
+    <div class="stats-grid">
+      <div class="stat-card reveal" style="--fill:92%">
+        <div class="stat-num">$149.8B</div>
+        <div class="stat-label">Size of the global entertainment &amp; character licensing industry in 2024 — already one of the largest licensing categories there is</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill"></div></div>
+        <div class="stat-footnote">Meanwhile, counterfeit character merchandise cost Japan alone an estimated $30B in 2025 — METI</div>
+      </div>
+      <div class="stat-card reveal" style="--fill:80%">
+        <div class="stat-num">3.6B+</div>
+        <div class="stat-label">People play video games worldwide today — plus another ~1B watching anime, and both numbers keep climbing</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill"></div></div>
+      </div>
+      <div class="stat-card reveal" style="--fill:68%">
+        <div class="stat-num">$389.8B</div>
+        <div class="stat-label">Total global licensing industry sales in 2025, up from $369.6B in 2024 — and still accelerating</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill"></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== FOR DESIGNERS & ARTISTS group ===== -->
+<div class="group-label-wrap on-alt">
+  <div class="group-label teal">For Designers &amp; Artists</div>
+</div>
+<div class="section-wrap dark">
+  <section>
+    <div class="section-tag">For Creators</div>
+    <h2>Built around the people<br>who make the art.</h2>
+    <p class="section-desc">Independent creators were never the priority for the big platforms. Here, they're the starting point.</p>
+    <div class="feature-grid">
+      <div class="feature-card on-dark reveal"><div class="feature-icon">🔒</div><h3>Your rights stay yours</h3><p>It's always a license, never a transfer. You keep ownership of everything you create — always.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon">🛡️</div><h3>No account-risk anxiety</h3><p>Every design in our library is pre-cleared, licensed IP — no takedown surprises, no accounts wiped out overnight.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon">📦</div><h3>Sellers bring the reach</h3><p>You don't have to chase traffic. Active print-on-demand sellers put your work in front of buyers who are already looking.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon">💳</div><h3>Transparent, itemized payouts</h3><p>Production cost, platform fee, and your payout — shown separately, paid out weekly. No opaque "royalty" number, no waiting a month for your money.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon">⚖️</div><h3>Fair terms, both ways</h3><p>30-day mutual notice if either side wants out. If your work isn't picked up within 90 days, you're free to use it elsewhere.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon">🏬</div><h3>Beyond print-on-demand</h3><p>We also open doors to physical and wholesale brand licensing — not just digital storefronts.</p></div>
+    </div>
+  </section>
+</div>
+
 <div class="cta-wrap">
   <div class="cta-inner">
     <div class="section-tag">Get Started</div>
     <h2>Ready to be part<br>of the change?</h2>
-    <p>Whether you're an IP holder looking to monetize your catalog, or a seller ready to go fully legal — let's talk.</p>
+    <p>Whether you're an IP holder looking to monetize your catalog, a designer ready to license your work, or a seller ready to go fully legal — let's talk.</p>
     <div class="cta-cta"><a href="contact.html" class="btn-primary">Contact Us <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     <div class="tubitak">TÜBİTAK BİGG Program — Supported Venture</div>
   </div>
