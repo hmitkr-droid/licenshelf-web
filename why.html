@@ -63,6 +63,7 @@ h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); fon
 .problem-card { background: var(--bg); border: 1.5px solid rgba(255,107,53,0.25); border-radius: 14px; padding: 1.8rem; transition: border-color 0.3s, transform 0.2s, box-shadow 0.2s; }
 .problem-card:hover { border-color: rgba(255,107,53,0.5); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(255,107,53,0.08); }
 .problem-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--orange-light); border: 1px solid rgba(255,107,53,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 1.2rem; }
+.problem-icon svg { width: 22px; height: 22px; }
 .problem-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.01em; }
 .problem-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
 .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
@@ -71,6 +72,7 @@ h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); fon
 .feature-card:hover::before { opacity: 1; }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
 .feature-icon { width: 46px; height: 46px; border-radius: 11px; background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.18); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 1.2rem; }
+.feature-icon svg { width: 23px; height: 23px; }
 .feature-card h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
 .feature-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
 .compare { border: 1.5px solid var(--border-light); border-radius: 16px; overflow: hidden; background: var(--bg); }
@@ -281,10 +283,10 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     <h2>Four reasons the<br>old way fails.</h2>
     <p class="section-desc">Traditional licensing wasn't designed for independent creators — and it shows at every step.</p>
     <div class="problem-grid">
-      <div class="problem-card reveal"><div class="problem-icon">🏢</div><h3>Only for the big players</h3><p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Mid-sized license holders and sellers never had a chance.</p></div>
-      <div class="problem-card reveal"><div class="problem-icon">⚠️</div><h3>Sellers live in fear</h3><p>Thousands of Etsy and Amazon sellers use IP content without licenses — not by choice, but because there's no accessible alternative.</p></div>
-      <div class="problem-card reveal"><div class="problem-icon">💸</div><h3>IP holders lose revenue</h3><p>Massive unlicensed markets exist for gaming, anime, and pop culture IP. Rights holders see none of that money.</p></div>
-      <div class="problem-card reveal"><div class="problem-icon">🛍️</div><h3>Consumers can't get what they want</h3><p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"/><rect x="8" y="6" width="2.2" height="2.2"/><rect x="13.8" y="6" width="2.2" height="2.2"/><rect x="8" y="10.5" width="2.2" height="2.2"/><rect x="13.8" y="10.5" width="2.2" height="2.2"/><rect x="8" y="15" width="2.2" height="2.2"/><rect x="13.8" y="15" width="2.2" height="2.2"/></svg></div><h3>Only for the big players</h3><p>Traditional licensing requires lawyers, minimum guarantees, and months of negotiations. Mid-sized license holders and sellers never had a chance.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 L21.5 20 L2.5 20 Z"/><line x1="12" y1="9" x2="12" y2="14"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg></div><h3>Sellers live in fear</h3><p>Thousands of Etsy and Amazon sellers use IP content without licenses — not by choice, but because there's no accessible alternative.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="15" r="6.5"/><path d="M9 12v6M6.5 15h5"/><path d="M14 10 L21 3M21 3h-5M21 3v5"/></svg></div><h3>IP holders lose revenue</h3><p>Massive unlicensed markets exist for gaming, anime, and pop culture IP. Rights holders see none of that money.</p></div>
+      <div class="problem-card reveal"><div class="problem-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10l1 12H6L7 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><line x1="9" y1="13" x2="15" y2="18"/><line x1="15" y1="13" x2="9" y2="18"/></svg></div><h3>Consumers can't get what they want</h3><p>Fans demand licensed products that don't exist — because the system to create them legally simply isn't there.</p></div>
     </div>
   </section>
 </div>
@@ -294,9 +296,9 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     <h2>What makes<br>Licenshelf different.</h2>
     <p class="section-desc">We didn't tweak the old model — we rebuilt licensing around the people it always excluded.</p>
     <div class="feature-grid">
-      <div class="feature-card reveal"><div class="feature-icon">📚</div><h3>Aggregated licenses</h3><p>We bring gaming, anime, and pop-culture IP into one curated library — so sellers don't have to chase rights holders one by one.</p></div>
-      <div class="feature-card reveal"><div class="feature-icon">⚡</div><h3>Automated royalties</h3><p>Every sale calculates and routes the license fee automatically. No invoices, no manual accounting, no disputes.</p></div>
-      <div class="feature-card reveal"><div class="feature-icon">🔌</div><h3>Built into POD platforms</h3><p>Licensing lives inside the tools sellers already use, like Printify — not in a separate portal nobody opens.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="16" height="4" rx="1"/><rect x="4" y="9" width="16" height="4" rx="1"/><rect x="4" y="4" width="16" height="4" rx="1"/></svg></div><h3>Aggregated licenses</h3><p>We bring gaming, anime, and pop-culture IP into one curated library — so sellers don't have to chase rights holders one by one.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="#00D4AA" stroke="none"><polygon points="13,2 4,14 11,14 10,22 20,9 13,9"/></svg></div><h3>Automated royalties</h3><p>Every sale calculates and routes the license fee automatically. No invoices, no manual accounting, no disputes.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v5M15 3v5"/><rect x="7" y="8" width="10" height="6" rx="2"/><path d="M12 14v3"/><path d="M8 20a4 4 0 0 1 8 0"/></svg></div><h3>Built into POD platforms</h3><p>Licensing lives inside the tools sellers already use, like Printify — not in a separate portal nobody opens.</p></div>
     </div>
   </section>
 </div>
@@ -353,12 +355,12 @@ footer { background: var(--bg); border-top: 1px solid var(--border-light); paddi
     <h2>Built around the people<br>who make the art.</h2>
     <p class="section-desc">Independent creators were never the priority for the big platforms. Here, they're the starting point.</p>
     <div class="feature-grid">
-      <div class="feature-card on-dark reveal"><div class="feature-icon">🔒</div><h3>Your rights stay yours</h3><p>It's always a license, never a transfer. You keep ownership of everything you create — always.</p></div>
-      <div class="feature-card on-dark reveal"><div class="feature-icon">🛡️</div><h3>No account-risk anxiety</h3><p>Every design in our library is pre-cleared, licensed IP — no takedown surprises, no accounts wiped out overnight.</p></div>
-      <div class="feature-card on-dark reveal"><div class="feature-icon">📦</div><h3>Sellers bring the reach</h3><p>You don't have to chase traffic. Active print-on-demand sellers put your work in front of buyers who are already looking.</p></div>
-      <div class="feature-card on-dark reveal"><div class="feature-icon">💳</div><h3>Transparent, itemized payouts</h3><p>Production cost, platform fee, and your payout — shown separately, paid out weekly. No opaque "royalty" number, no waiting a month for your money.</p></div>
-      <div class="feature-card on-dark reveal"><div class="feature-icon">⚖️</div><h3>Fair terms, both ways</h3><p>30-day mutual notice if either side wants out. If your work isn't picked up within 90 days, you're free to use it elsewhere.</p></div>
-      <div class="feature-card on-dark reveal"><div class="feature-icon">🏬</div><h3>Beyond print-on-demand</h3><p>We also open doors to physical and wholesale brand licensing — not just digital storefronts.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1.4" fill="#00D4AA" stroke="none"/></svg></div><h3>Your rights stay yours</h3><p>It's always a license, never a transfer. You keep ownership of everything you create — always.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>No account-risk anxiety</h3><p>Every design in our library is pre-cleared, licensed IP — no takedown surprises, no accounts wiped out overnight.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div><h3>Sellers bring the reach</h3><p>You don't have to chase traffic. Active print-on-demand sellers put your work in front of buyers who are already looking.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="3" y1="10.5" x2="21" y2="10.5"/><line x1="6.5" y1="15" x2="10.5" y2="15"/></svg></div><h3>Transparent, itemized payouts</h3><p>Production cost, platform fee, and your payout — shown separately, paid out weekly. No opaque "royalty" number, no waiting a month for your money.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="5" y1="7" x2="19" y2="7"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0l-3-6z"/><path d="M19 7l-3 6a3.2 3.2 0 0 0 6 0l-3-6z"/><path d="M8.5 21h7"/></svg></div><h3>Fair terms, both ways</h3><p>30-day mutual notice if either side wants out. If your work isn't picked up within 90 days, you're free to use it elsewhere.</p></div>
+      <div class="feature-card on-dark reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1-5h14l1 5"/><path d="M4 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0"/><path d="M5 9v11h14V9"/><rect x="10" y="14" width="4" height="6"/></svg></div><h3>Beyond print-on-demand</h3><p>We also open doors to physical and wholesale brand licensing — not just digital storefronts.</p></div>
     </div>
   </section>
 </div>
